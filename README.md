@@ -2,7 +2,7 @@
 A Comprehensive Approach to Deep Learning Using **Pytorch** 
 and **Keras** ( *TensorFlow 2.x*)
 
-**Sequence-I** Pytorch - [*14^th November, 2020*]
+**Sequence-I** **Pytorch** - [*14th November, 2020*]
 
 
 - [ ] Tensors ( Scalar, Vectors ) *{ %epoch: (-) }*
