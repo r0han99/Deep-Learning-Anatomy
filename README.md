@@ -14,7 +14,12 @@ and **Keras** ( *TensorFlow 2.x*)
  
 ## Pytorch Regression and Optimization 
 
-- [ ] Linear Regression 1 Dimension 
-- [ ] Linear Regression Training 
-- [ ] Gradient Descent 
+- [ ] Linear Regression 1 Dimension && Training
+- [ ] Simulated Gradient Descent
+- [ ] stochastic Gradient Descent 
+- [ ] Mini-Batch Gradient Descent 
+- [ ] Optimization 
+- [ ] Train, Validation and Test Splits
+
+
  
