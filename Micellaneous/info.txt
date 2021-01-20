@@ -1,0 +1,1 @@
+Tensors are idiosyncratic to pytorch framework this folder includes an individual reference work about the tensors, pytorch datatypes and in-build functions facilitating the deep-learning workflow.
