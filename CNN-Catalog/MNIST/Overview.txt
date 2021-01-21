@@ -1,0 +1,8 @@
+The Following Folder Contains two implementations of the same project statement, the two implementations/frameworks used are Pytorch and Keras. The end result of the two implementations will go through a Pipeline which generates 
+
+- report.csv with result metric comparisons 
+- Loss_Vs_Epoch or Accuracy_vs_epoch Charts 
+
+Report Params 
+
+>> Type, project-name, Framework ,Architecture, Layers, Hidden Units, Activations: list, Epochs, Metric, Score, summary
