@@ -1,2 +1,2 @@
-project,path
-MNIST,./Projects/MNIST/Pytorch/report.csv
+project,framework,path
+MNIST,Pytorch/,./Projects/MNIST/Pytorch/report.csv
