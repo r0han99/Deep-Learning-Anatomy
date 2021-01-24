@@ -28,7 +28,7 @@ _A progressive web application which holds all the Deep Learning projects that I
 - **[24th Jan, 2021]**  _init_
 
   - Developed a pipeline script which is executed post project development, this gathers all the meta information from the project such as The Neural Network     Architecture ( _layers_, _Hidden Units_ ), Type of Prediction ( _Classification_, _Regression_), Type of Network ( _Convolutional_, _Recurrent_ ) etc. The meta info is organised and a report file is created, which is then processed by the application from the project _dir_ to be rendered on the Web Page.
-  - Partially developed Application codebase.
+  - Partially developed Application codebase. Front-End Project Artefacts are laid down 
   
   
   
