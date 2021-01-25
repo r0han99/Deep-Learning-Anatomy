@@ -31,5 +31,12 @@ _A progressive web application which holds all the Deep Learning projects that I
   - Partially developed Application codebase. Front-End Project Artefacts are laid down 
   
   
+- **[26th Jan, 2021]** _new patches_ 
+  - created variable_dict and prompt_dict
+  - Added commandline functionalities to the pipeline script to handle var-dicts and prompt-list
+  - now the prompts under the project artefacts are predefined and dynamically generated
+  - segmented artefacts and plots into radios
+  - added download-link to the source-code pdf
   
+
   
