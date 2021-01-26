@@ -15,8 +15,33 @@ and _Keras_
 
 ## Project Abstract 
 
-_A progressive web application which holds all the Deep Learning projects that I work on, during the timeline. Post every project's completion all the meta-data regarding the deep learning model unique to that particular problem statement is dynamically collected, organised and made into a report file to establish the parameters of the project for future reference and a better understanding of the project itself. This organised information is then rendered on the web application deployed on the cloud for anyone to briefly absorb the concept behind the implementation. The application will also include a section, to allow, the manual intervention of a user to try out the model in real-time with their input concerning the project._
+_A progressive web application which holds all the Deep Learning projects that I work on, during the timeline. Post every project's completion all the meta-data regarding the deep learning model unique to that particular problem statement is dynamically collected, organised and made into a report file to establish the parameters of the project for future reference and a better understanding of the project itself. This organised information is then rendered on the web application deployed on the cloud for anyone to briefly absorb the concept behind the implementation. The application will also include a section, to allow  manual intervention of a user to try out the model in real-time with their input concerning the project. The entire front-end aesthetics were facilitated by the Streamlit Library with python codebase._
 
+[Abstract Communication Model](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/DL-Anatomy-comms.png), which represents the sequence of actions and comms between the _scripts_ before a project ends up in the _Application catalogue_.
+
+
+## Project Catalogue 
+
+### _Pytorch & Keras_ 
+
+( Pre-Deployment ) 
+
+  - ___MNIST___
+  - ___CIFAR-10___
+
+( Post-Deployment )
+
+  - ___Dogs-&-Cats___
+  
+  
+ 
+## Testing Idealogy of Pipeline Script 
+
+- MNIST : Anchores the process of establishing the comprehensive report sheet which is to be rendered on the web-page.
+- CIFAR-10 : Facilitates the process of constructing and Testing a Robust pipeline script which dynamically creates report-sheets with minimal human intervention.
+- Cats-&-Dogs : Validates the report generation process and pipeline robustness post-deployment
+
+Note, These 3 projects were the support structures to _test_ and _automate_ the process to fill the project catalogue dynamically.
 
 ## Deployment Log 
 
@@ -38,5 +63,8 @@ _A progressive web application which holds all the Deep Learning projects that I
   - segmented artefacts and plots into radios
   - added download-link to the source-code pdf
   
+  
+  
+
 
   
