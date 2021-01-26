@@ -38,7 +38,7 @@ _A progressive web application which holds all the Deep Learning projects that I
 ## Pipeline Script Testing Ideology
 
 - MNIST : Anchores the process of establishing the comprehensive report sheet which is to be rendered on the web-page.
-- CIFAR-10 : Facilitates the process of constructing and Testing a Robust pipeline script which dynamically creates report-sheets with minimal human intervention.
+- CIFAR-10 : Facilitates the process of Constructing and Testing a robust pipeline script which dynamically creates report-sheets with minimal human intervention.
 - Cats-&-Dogs : Validates the report generation process and pipeline robustness post-deployment
 
 Note, These 3 projects were the support structures to _test_ and _automate_ the process to fill the project catalogue dynamically.
@@ -62,6 +62,7 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
   - now the prompts under the project artefacts are predefined and dynamically generated
   - segmented artefacts and plots into radios
   - added download-link to the source-code pdf
+  - cs_plots() will render the plots related/included in a particular project
   
   
   
