@@ -35,7 +35,7 @@ _A progressive web application which holds all the Deep Learning projects that I
   
   
  
-## Testing Idealogy of Pipeline Script 
+## Pipeline Script Testing Ideology
 
 - MNIST : Anchores the process of establishing the comprehensive report sheet which is to be rendered on the web-page.
 - CIFAR-10 : Facilitates the process of constructing and Testing a Robust pipeline script which dynamically creates report-sheets with minimal human intervention.
