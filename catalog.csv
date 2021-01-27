@@ -1,2 +1,3 @@
 date,project,framework,path
 27-Wednesday (2021),MNIST,Pytorch/,./Projects/MNIST/Pytorch/report.csv
+27-Wednesday (2021),MNIST,Keras/,./Projects/MNIST/Keras/report.csv

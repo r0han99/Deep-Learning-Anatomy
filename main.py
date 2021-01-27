@@ -36,13 +36,16 @@ def read_catalog():
 # @st.cache(persist=True,allow_output_mutation=True)
 def read_meta(df_slice):
 
+    # st.write("df_slice['path'].values[0])",df_slice['path'].values[0])
     
     try: 
         report = pd.read_csv(df_slice['path'].values[0])
+        
         try:
             report = report.drop('Unnamed: 0',axis=1)
         except:
             pass
+        
         return report
     except:
         
@@ -52,6 +55,7 @@ def read_meta(df_slice):
 def model_eval(model):
 
     st.markdown('***Real-Time Model Evaluation***')
+    
     
     
    
@@ -87,6 +91,8 @@ def cs_body(report,project,framework):
     expander = st.beta_expander('Source-Code')
     expander.markdown('_Ipynb_ translated into _PDF_ using _LaTeX_')
     expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64>]({}) <small style='color:blue;'><i>Download</i></small>'''.format(img_to_bytes('./ipynb.png'),pdf_url), unsafe_allow_html=True)
+    if expander.checkbox('Note'):
+        expander.markdown('_"This link is dynamically generated, so in the case of non-existent url to pdf, it is possible to traceback a 404 error, please visit the main repository for more info."_')
         
 
 def cs_plots(report):
@@ -125,11 +131,17 @@ def cs_main():
         project = st.sidebar.selectbox('Project',projects, key='project-name')  
         framework  = st.sidebar.radio("Framework", ("Pytorch", "Keras"), key='Deep-Learning-frameworks') 
 
+
+
         # catalog according to framework
         catalog_fw = catalog[catalog['framework'] == framework+'/']
         
+       
+        slice_ = catalog_fw[catalog_fw['project'] == project]
+        
+
         # report df 
-        report = read_meta(catalog_fw[catalog_fw['project'] == project])
+        report = read_meta(slice_)
         
 
         st.markdown('***')
