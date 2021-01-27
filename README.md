@@ -64,6 +64,13 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
   - added download-link to the source-code pdf
   - cs_plots() will render the plots related/included in a particular project
   
+- **[27th Jan, 2021]** _Keras MNIST and Patches_
+  - _Keras_ MNIST is added into Catalog 
+  - Pipeline script is now more verbose with integrated documentation
+  - catalog status can be fetched by pipeline script with provided args 
+  
+ 
+  
   
   
 
