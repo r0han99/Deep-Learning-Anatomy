@@ -25,31 +25,6 @@ def init_report():
     '''
     pass
 
-
-def generate_report(project_path, project_name, fw, report):
-    date = datetime.datetime.now().strftime('%d-%A (%Y)')
-
-    # creates an Anchor point for the Application c
-    if os.path.exists(project_path+'report.csv'):
-        print("report already exists, manually verify if it's the one, else delete it and run the script")
-    else:
-        report.to_csv(project_path+'report.csv')
-        print('report created!')
-        print('Updating Catalog .. ')
-        if not os.path.exists('../catalog.csv'):
-            print('No catalog file in existence, creating one, writing content..')
-            with open('../catalog.csv','w') as f:
-                f.write('{},{},{},{}\n'.format('date','project','framework','path'))
-            # write content
-            with open('../catalog.csv','a+') as f:
-                f.write('{},{},{},{}\n'.format(date,project_name,fw,'./Projects/'+project_path[2:]+'report.csv'))
-                print('Done!')
-        
-        else:
-            with open('../catalog.csv','a+') as f:
-                f.write('{},{},{},{}\n'.format(date,project_name,fw,'./Projects/'+project_path[2:]+'report.csv'))
-            
-            print('Done!')
         
 def state_method():
 
@@ -110,7 +85,7 @@ Arguments - Description
     -varl or --var-list [optional] : prints variable/artifact list or dictionary with datatypes 
         * [optional]
 
-            1. --update : update a the dictionary and var-list with new artifact
+            1. --update : update a the dictionary and var-list with new artifacts
             2. --pop : pop an unwanted artifact 
 
     --status [optional] : prints out catalog with all the projects done until then
@@ -127,8 +102,8 @@ Arguments - Description
 
 
 def meta_collect(project_path,project_name,fw):
+    date = datetime.datetime.now().strftime('%d-%A (%Y)')
     '''
-
 
     This function collects all the Data required to create a report.csv file
     control flow will be if-else anchored on framework name, since two-frameworks have two distinct reports 
@@ -140,15 +115,36 @@ def meta_collect(project_path,project_name,fw):
 
     meta = os.path.join(project_path,'artefacts.txt')
     if os.path.exists(meta):
-        print('artefacts.txt exists, extracting content and remodelling .. ')
+        print('artefacts.txt exists..')
         with open(meta, 'rb') as f: 
              data = f.read() 
   
         d = pickle.loads(data) 
-        report = pd.DataFrame(pd.Series(d)).T
+        # report = pd.DataFrame(pd.Series(d)).T
+
+        dev = '../catalog1.csv'
+        main= '../catalog.csv'
+
+        print('Updating Catalog .. ')
+        if not os.path.exists(main):
+            print('No catalog file in existence, creating one, writing content..')
+            with open(main,'w') as f:
+                f.write('{},{},{},{}\n'.format('date','project','framework','path'))
+            # write content
+            with open(main,'a+') as f:
+                f.write('{},{},{},{}\n'.format(date,project_name,fw,'./Projects/'+project_path[2:]+'artefacts.txt'))
+                print('Done!')
+        
+        else:
+            with open(main,'a+') as f:
+                f.write('{},{},{},{}\n'.format(date,project_name,fw,'./Projects/'+project_path[2:]+'artefacts.txt'))
+            
+            print('Done!')
+
+
         
         # report.csv creation
-        generate_report(project_path, project_name,fw, report)
+        # generate_report(project_path, project_name,fw, report)
         
 
     else:
@@ -202,6 +198,13 @@ def pickle_handle(file_path,method,d=None):
         return d
 
 
+def artefact_edit(path):
+
+    path = './MNIST/Keras/artefacts.txt'
+    artefact = pickle_handle(path,'load')
+    # for key, value in zip(artefact.keys(),artefact.values()):
+    
+    #     print(artefact)
 
 
 def main():
@@ -331,19 +334,24 @@ def main():
     elif sys.argv[1] == '-h' or sys.argv[1] == '--help':
         docs()
 
+    
+    elif sys.argv[1] == '-ar':
+        artefact_edit('')
+    
+    
+    
+    
+    
+    
     elif len(sys.argv) == 1:
 
         print('This Script Takes in Command-Line Arguments, triggering the functionalitied required, try --help for assistance')
         exit(0)
 
-        
 
-    
-            
 
-        
-       
-        
+
+
 
 
 

@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd 
 # os dependencies
 from pathlib import Path
+import datetime
 import base64
 import pickle
 import glob
@@ -25,37 +26,18 @@ def img_to_bytes(img_path):
     return encoded
 
 # @st.cache(persist=True)
-def read_catalog():
+def read_catalog(path):
     
-    catalog = pd.read_csv('./catalog.csv')
+    catalog = pd.read_csv(path)
     paths = list(catalog['path'])
     projects = list(catalog['project'].unique())
     
     return catalog, paths, projects
 
-# @st.cache(persist=True,allow_output_mutation=True)
-def read_meta(df_slice):
-
-    # st.write("df_slice['path'].values[0])",df_slice['path'].values[0])
-    
-    try: 
-        report = pd.read_csv(df_slice['path'].values[0])
-        
-        try:
-            report = report.drop('Unnamed: 0',axis=1)
-        except:
-            pass
-        
-        return report
-    except:
-        
-        return 'Crude'
-
 
 def model_eval(model):
 
     st.markdown('***Real-Time Model Evaluation***')
-    
     
     
    
@@ -64,8 +46,8 @@ def cs_body(report,project,framework):
 
     pdf_url = 'https://github.com/r0han99/Deep-Learning-Anatomy/raw/main/Projects/' + project + '/' + framework + '/' + project+'-'+framework + '.pdf'
 
-    cols = report.columns[3:-1]
-    report.fillna('None',inplace=True)
+    cols = list(report.keys())[3:-3]
+    # report.fillna('None',inplace=True)
     st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Project Artefacts</h3>",unsafe_allow_html=True)
     st.markdown('***')
 
@@ -73,16 +55,18 @@ def cs_body(report,project,framework):
         data = f.read() 
     d = pickle.loads(data)
 
+
     
-    for i in range(len(d)-1):
+
+    for i,col in enumerate(cols):
         st.markdown(d[i])
-        st.code(report[cols[i]].values[0])
+        st.code(report[col])
 
 
     st.markdown('***')
 
     st.markdown('Summary: ')
-    st.markdown('_'+report['summary'].values[0]+'_')
+    st.markdown('_'+report['summary']+'_')
 
 
 
@@ -99,7 +83,7 @@ def cs_plots(report):
 
     st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Visualisation of Train Cycle <br>( Epoch vs Metric/Loss )</h3>",unsafe_allow_html=True)
     
-    path = report['plots'].values[0]
+    path = report['plots']
 
     
     for name in glob.glob(path+'/*.png'):
@@ -125,60 +109,80 @@ def cs_main():
     st.sidebar.markdown('***')
     
 
-
-    if os.path.exists('./catalog.csv'):
-        catalog, paths, projects = read_catalog() # read paths 
+    catalog_path = './catalog.csv'
+    if os.path.exists(catalog_path):
+        catalog, paths, projects = read_catalog(catalog_path) # read paths 
         project = st.sidebar.selectbox('Project',projects, key='project-name')  
         framework  = st.sidebar.radio("Framework", ("Pytorch", "Keras"), key='Deep-Learning-frameworks') 
-
 
 
         # catalog according to framework
         catalog_fw = catalog[catalog['framework'] == framework+'/']
         
-       
-        slice_ = catalog_fw[catalog_fw['project'] == project]
-        
+        # st.write(catalog_fw)
 
-        # report df 
-        report = read_meta(slice_)
-        
+        if not catalog_fw.empty:
+            slice_ = catalog_fw[catalog_fw['project'] == project]
+             # report df 
+            with open(slice_['path'].values[0],'rb') as f:
+                data = f.read()
+            
+            report = pickle.loads(data)
 
-        st.markdown('***')
-        
-        if not isinstance(report, pd.DataFrame):
-            st.markdown("There are no traces of a _report.csv_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
 
-        
-        else:
-            temp_desc = report['desc'][0]
+            temp_desc = report['desc']
             st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project),unsafe_allow_html=True)
             st.markdown('**Description** ~ _{}_'.format(temp_desc))
             st.markdown('**Implementation** ~ ___{}___'.format(framework))
             
             st.markdown('***')
 
-            options = st.sidebar.radio('View', ('Project Artefacts','Plots'), key='web-page-definition')
-            if options == 'Project Artefacts':
-                cs_body(report,project,framework)
-            if options == 'Plots':
-                cs_plots(report)
+            radios = ('Project Artefacts','Data Overview','Plots','Model Eval')
+
+            st.sidebar.markdown('***') # sidebar section break
+
+            options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
+
             
 
-            st.sidebar.markdown('***')
-            expander = st.sidebar.beta_expander('Want to try?')
-            expander.warning('Currently Under-Beta')
-            if expander.checkbox('yes?'):
-                model_eval('model')
+            if options == 'Project Artefacts':
+                cs_body(report,project,framework)
+            elif options == 'Plots':
+                cs_plots(report)
+            elif options == 'Data Overview':
+                pass
+            elif options == 'Model Eval':
+                # later copy this piece of code and convert it into a subroutine
+                expander = st.beta_expander('Want to try?')
+                expander.warning('Currently Under-Beta')
+                if expander.checkbox('yes?'):
+                    model_eval('model')
+
+        
+        else:
+            st.markdown("There are no traces of a _report.csv_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
+
+       
+        
+
+        st.markdown('***')
+        
+       
+        
+       
+
+
+
+            
 
 
 
     # if catalog.csv doesn't exist
     else:
-        st.warning("There's a possibility that the repository is corrupted -- required catalog for initiation is non-existent.")
+        st.warning("There's a possibility that the repository is corrupted -- required catalog for initiation is non-existent. run pipline script to establish catalog.")
     
     
-    st.sidebar.markdown('***') 
+    
     
     
         
@@ -193,4 +197,5 @@ def cs_main():
 if __name__ == '__main__':
     cs_main()
     st.sidebar.markdown('***')
-    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64>](https://github.com/r0han99/) <small><i>Database of My Knowledge</i></small>'''.format(img_to_bytes('./tesseract.png')), unsafe_allow_html=True)
+    
+    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64>](https://github.com/r0han99/) <small><i>Developed and Deployed by r0han;</i></small>'''.format(img_to_bytes('./tesseract.png')), unsafe_allow_html=True)
