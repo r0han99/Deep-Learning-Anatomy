@@ -69,9 +69,12 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
   - Pipeline script is now more verbose with integrated documentation
   - catalog status can be fetched by pipeline script with provided args 
   
- 
-  
-  
+- **[30th Jan, 2021]** _pipeline patch-3, application dev++_
+  - report.csv creation is now deprecated, byte encoded artefacts are used for rendering information
+  - pipeline modified to the above criteria
+  - added network 4 missed out network artifacts - Loss, batch_size, learning_rate, optimizer
+  - changed logo to iteration3
+   
   
 
 
