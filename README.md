@@ -75,7 +75,11 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
   - added network 4 missed out network artifacts - Loss, batch_size, learning_rate, optimizer
   - changed logo to iteration3
    
-  
+- **[1st Feb, 2021]** _data-overview, model-eval, patch-4_
+
+  - Script Name changed to app.py following the streamlit convention
+  - Added Data collection procedure required for both Data Overview section and Model Evaluation
+  - added doc string to pipeline script for the data collection procecure
 
 
   
