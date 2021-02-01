@@ -32,9 +32,72 @@ def state_method():
 
 preliminary - 
 
-        * create - /Plots and save all the epoch-cycle plots 
-        * create data for rendering # trail 
+    * create - /Plots and save all the epoch-cycle plots 
+    * create Data Overview as using the following 
+
+Step-1 -
+
+import os
+path = '../samples/'
+overview_path = '../samples/overview.txt'
+eval_path  = '../samples/eval.txt'
+
+if os.path.exists(path):
+
+    print('samples dir, exists.. \nchecking for dictionaries existence..')
+    if os.path.exists('./samples/overview.txt') and os.path.exists('./samples/eval.txt'):
+        print('Data exists. no need of overwritting.')
+    else:
+        print("overview and eval doesn't exist, proceed to step-2")
+
+else:
+    print("samples/ dir is non-existent, Establishing one..")
+    os.mkdir(path) # samples directory 
+
+Step-2 
+
+# dictionary init
+overview_dict = {}
+eval_dict = {}
+
+# fill the following - 
+# for overview
+#string
+kind = 'Image Data'
+#tuple
+dimensions = x_train.shape    
+#labels : str(list of unique target values)
+targets = list(np.unique(y_train))
+#nd.array        
+data = x_train[0:3]
+#nd.array
+labels = y_train[0:3]
+
+vars0 = ['kind','dimensions', 'targets', 'data', 'labels']
+
+# filling overview_dict 
+for x in vars0:
+    try:
+        overview_dict[x] = eval(x)
+    except:
+        overview_dict[x] = x
+
+# evaluate_dict 
+
+eval_dict = {'test_cases' : x_test[0:50], 'true': y_test[0:50],'model':'None ( model obj )'}
+
+
+# dump 1 
+with open(overview_path,'wb') as f:
+    pickle.dump(overview_dict,f)
+
+# dump 2 
+with open(eval_path,'wb') as f:
+    pickle.dump(eval_dict,f)
+
+
         
+MAIN- 
 step - 1, use ../../pipline -varl with 1 to get the var-dict to show the variables to be filled with 
 step - 2 - use the following snippet after fetching ../../pipeline -varl with 2 
     example: 
@@ -278,7 +341,7 @@ def main():
             elif sys.argv[2] == '--pop':
                 # popping variable 
                 print('Popping Existing variable and dtype from var-dict')
-                variable = input('Enter variable to add into dictionary: ')
+                variable = input('Enter variable to pop outof the dictionary: ')
                 try:
                     d.pop(variable)
                     print(f'{variable} deleted from the records! -- saving state..')
