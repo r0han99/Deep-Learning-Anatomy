@@ -3,13 +3,15 @@
 import streamlit as st 
 # dataset dependencies 
 import numpy as np
-import pandas as pd 
+import pandas as pd
+import matplotlib.pyplot as plt 
 # os dependencies
 from pathlib import Path
 import datetime
 import base64
 import pickle
 import glob
+import re
 import os 
 
 # '''
@@ -18,6 +20,7 @@ import os
 # keras = ?  
 
 # '''
+
 
 # image encoding 
 def img_to_bytes(img_path):
@@ -35,10 +38,51 @@ def read_catalog(path):
     return catalog, paths, projects
 
 
-def model_eval(model):
+def model_eval(evaluate_path):
 
-    st.markdown('***Real-Time Model Evaluation***')
     
+    st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Real-Time Model Evaluation</h3>",unsafe_allow_html=True)
+
+    st.markdown('***')
+    try:
+        path = evaluate_path
+        with open(path,'rb') as f:
+            temp = f.read()
+        test_data = pickle.loads(temp)
+
+    except:
+        st.warning('The file encapsulating the required sample data for the overview block is non-existent, try again later;')
+
+    else:
+        rn_index = np.random.randint(0,50,1)
+        x,y,model = test_data.values()
+        
+        expander = st.beta_expander('Evaluation type')
+        control = expander.radio('choose',('Random Test-Case', 'Upload Test-Case'))
+        st.markdown('***')
+        st.markdown(f'___{control}___')
+        
+        image_col, prompt_col = st.beta_columns(2)
+        
+        if control == 'Random Test-Case':
+            image_col.image(np.invert(x[rn_index]),caption='Label - ?', width=220)
+            ans = prompt_col.selectbox('What do you think this is?',("I don't know",f"It is target - {y[rn_index]}"))
+            
+            st.markdown('***')
+            st.write('___Model Classification___')
+
+            # in future the eval_dict will contain paths to both keras model and pytorch model 
+            # so user can pick one from here 
+
+            st.write(model)
+
+        else:
+            image_file = st.file_uploader("Upload Image",type=['jpg', 'png', 'jpeg'])
+            st.image(image_file,width=220)
+            # st.write(model)
+    
+        
+
     
    
     
@@ -55,7 +99,7 @@ def cs_body(report,project,framework):
         data = f.read() 
     d = pickle.loads(data)
 
-
+    # st.write(cols)
     
 
     for i,col in enumerate(cols):
@@ -76,20 +120,68 @@ def cs_body(report,project,framework):
     expander.markdown('_Ipynb_ translated into _PDF_ using _LaTeX_')
     expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64>]({}) <small style='color:blue;'><i>Download</i></small>'''.format(img_to_bytes('./ipynb.png'),pdf_url), unsafe_allow_html=True)
     if expander.checkbox('Note'):
-        expander.markdown('_"This link is dynamically generated, so in the case of non-existent url to pdf, it is possible to traceback a 404 error, please visit the main repository for more info."_')
+        expander.markdown('_"This link is a dynamically generated link, if this is a non-existent url, it is possible to traceback a 404 error, please visit the main repository for more info."_')
         
 
 def cs_plots(report):
 
     st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Visualisation of Train Cycle <br>( Epoch vs Metric/Loss )</h3>",unsafe_allow_html=True)
-    
+    st.markdown('***')
     path = report['plots']
 
     
     for name in glob.glob(path+'/*.png'):
         st.image(name)
         
+def cs_data(overview_path):
+    st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Data Characteristics and Overview</h3>",unsafe_allow_html=True)
 
+    st.markdown('***')
+    
+    
+    try:
+        path = overview_path
+        with open(path,'rb') as f:
+            temp = f.read()
+        data = pickle.loads(temp)
+
+    except:
+        st.warning('The file encapsulating the required sample data for the overview block is non-existent, try again later;')
+
+    else:
+        # st.write(data)
+        if re.search(r'[Ii]mage',data['kind']):
+            st.markdown('___Training-set Dimensions:___ `{}`'.format(data['dimensions']))
+            
+            st.markdown('* _Number of Samples: `{}`_'.format(data['dimensions'][0]))
+            st.markdown('* _What kind of Data?:_ `{}`'.format(data['kind']))
+            st.markdown('* _Image Dimensions (H x W) pixels : `({}x{})`_'.format(data['dimensions'][1],data['dimensions'][2]))
+            st.markdown('* _Number of Color Channels: `{}`_'.format(data['dimensions'][3]))
+            st.markdown('* _Target Labels_:  `{}`'.format(data['targets']))
+
+            st.markdown('***')
+
+            st.markdown('___Image Data Exemplified : (3, randomly selected samples )___')
+            cols = st.beta_columns(3)
+            cols[0].image(data['data'][0],caption='Label - '+str(data['labels'][0]),width=175)
+            cols[1].image(data['data'][1],caption='Label - '+str(data['labels'][1]),width=175)
+            cols[2].image(data['data'][2],caption='Label - '+str(data['labels'][2]),width=175)
+
+            # if st.checkbox('Note')
+        else:
+            # '''
+            # Structured Data, --> Title
+            # * Traininng_set Dims 
+            # * Feature Columns
+            # * Target column 
+            # * Data.info() as code block 
+            # * Data.head at the end
+
+            # '''
+
+            pass
+
+    
     
 
 
@@ -115,6 +207,11 @@ def cs_main():
         project = st.sidebar.selectbox('Project',projects, key='project-name')  
         framework  = st.sidebar.radio("Framework", ("Pytorch", "Keras"), key='Deep-Learning-frameworks') 
 
+        # for data-overview and eval
+        overview = os.path.join('./Projects', project, 'samples','overview.txt')
+        
+        evaluate = os.path.join('./Projects', project, 'samples','evaluate.txt')
+
 
         # catalog according to framework
         catalog_fw = catalog[catalog['framework'] == framework+'/']
@@ -137,7 +234,7 @@ def cs_main():
             
             st.markdown('***')
 
-            radios = ('Project Artefacts','Data Overview','Plots','Model Eval')
+            radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
 
             st.sidebar.markdown('***') # sidebar section break
 
@@ -150,14 +247,10 @@ def cs_main():
             elif options == 'Plots':
                 cs_plots(report)
             elif options == 'Data Overview':
-                pass
-            elif options == 'Model Eval':
+                cs_data(overview)
+            elif options == 'Model Evaluation':
                 # later copy this piece of code and convert it into a subroutine
-                expander = st.beta_expander('Want to try?')
-                expander.warning('Currently Under-Beta')
-                if expander.checkbox('yes?'):
-                    model_eval('model')
-
+                model_eval(evaluate)
         
         else:
             st.markdown("There are no traces of a _report.csv_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
@@ -170,11 +263,6 @@ def cs_main():
        
         
        
-
-
-
-            
-
 
 
     # if catalog.csv doesn't exist
@@ -195,6 +283,8 @@ def cs_main():
 
 
 if __name__ == '__main__':
+    
+
     cs_main()
     st.sidebar.markdown('***')
     
