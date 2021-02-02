@@ -4,10 +4,9 @@ import streamlit as st
 # dataset dependencies 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt 
 # os dependencies
 from pathlib import Path
-import datetime
+# import datetime
 import base64
 import pickle
 import glob
@@ -41,7 +40,7 @@ def read_catalog(path):
 def model_eval(evaluate_path):
 
     
-    st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Real-Time Model Evaluation</h3>",unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Real-Time Model Evaluation</h3>",unsafe_allow_html=True)
 
     st.markdown('***')
     try:
@@ -92,7 +91,7 @@ def cs_body(report,project,framework):
 
     cols = list(report.keys())[3:-3]
     # report.fillna('None',inplace=True)
-    st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Project Artefacts</h3>",unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Project Artefacts</h3>",unsafe_allow_html=True)
     st.markdown('***')
 
     with open('./prompt-list.txt', 'rb') as f:
@@ -125,7 +124,9 @@ def cs_body(report,project,framework):
 
 def cs_plots(report):
 
-    st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Visualisation of Train Cycle <br>( Epoch vs Metric/Loss )</h3>",unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Visualisation of Train Cycle ( Epoch vs Metric/Loss )</h3>",unsafe_allow_html=True)
+    
+    
     st.markdown('***')
     path = report['plots']
 
@@ -134,7 +135,7 @@ def cs_plots(report):
         st.image(name)
         
 def cs_data(overview_path):
-    st.markdown("<h3 style='font-family: Avenir; font-weight:bold; font-size:30px;'>Data Characteristics and Overview</h3>",unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Data Characteristics and Overview</h3>",unsafe_allow_html=True)
 
     st.markdown('***')
     
@@ -161,12 +162,16 @@ def cs_data(overview_path):
 
             st.markdown('***')
 
-            st.markdown('___Image Data Exemplified : (3, randomly selected samples )___')
+            st.markdown('___Image Data Exemplified : ___')
             cols = st.beta_columns(3)
             cols[0].image(data['data'][0],caption='Label - '+str(data['labels'][0]),width=175)
             cols[1].image(data['data'][1],caption='Label - '+str(data['labels'][1]),width=175)
             cols[2].image(data['data'][2],caption='Label - '+str(data['labels'][2]),width=175)
 
+            st.markdown('***')
+            if st.checkbox('Note',False):
+
+                st.markdown('_Only 3 randomly selected samples are displayed here, to fit the aesthetics._')
             # if st.checkbox('Note')
         else:
             # '''
@@ -188,16 +193,13 @@ def cs_data(overview_path):
 
 
 def cs_main():
-
-    '''
-    A line to read the report paths
     
-    '''
-
-    tagline = 'A comprehensive approach to attain the Deep Learning Knowledge'
-    st.markdown('''<h1>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:left;'>{}</p></h1>'''.format(img_to_bytes("deep-learning.png"),tagline),unsafe_allow_html=True)
-    
-    st.sidebar.markdown("<h2 style='font-family:century gothic;'>Project Catalog 📓</h2>",unsafe_allow_html=True)
+    st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./brain.png",layout="centered",initial_sidebar_state="auto",)
+   
+    tagline = 'A pragmatic approach to attain the Deep Learning Knowledge'
+    st.markdown('''<h1 style='text-align:center;'>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("deep-learning.png"),tagline),unsafe_allow_html=True)
+    st.markdown('<hr style="height:2px;border-width:0;color:gray;background-color:gray">',unsafe_allow_html=True)
+    st.sidebar.markdown("<h2 style='font-family:BioRhyme; '>Project Catalog 📓</h2>",unsafe_allow_html=True)
     st.sidebar.markdown('***')
     
 
@@ -288,4 +290,13 @@ if __name__ == '__main__':
     cs_main()
     st.sidebar.markdown('***')
     
-    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64>](https://github.com/r0han99/) <small><i>Developed and Deployed by r0han;</i></small>'''.format(img_to_bytes('./tesseract.png')), unsafe_allow_html=True)
+    st.sidebar.markdown("<h5 style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize; '> ∑ Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: green;'>r0han<i></h5>",unsafe_allow_html=True)
+    st.sidebar.markdown('***')
+    expander = st.sidebar.beta_expander('Iteration?')
+    expander.markdown(' * `Iteration-0 | 2nd Feb, 2021;`')
+    expander.markdown('***')
+    
+    expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./tesseract.png')), unsafe_allow_html=True)
+    # st.sidebar.markdown('''''')
+    
+    
