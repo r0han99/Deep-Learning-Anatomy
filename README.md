@@ -81,5 +81,8 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
   - Added Data collection procedure required for both Data Overview section and Model Evaluation
   - added doc string to pipeline script for the data collection procecure
 
+[continuation...](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/changelog.md)
+
+***
 
   
