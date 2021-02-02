@@ -159,6 +159,12 @@ Arguments - Description
 
     --state : prints the actual procedure required to establish a report.csv
 
+    -ar [optional] : prints arifact for a provided framework & project 
+        * [optional]
+            
+            1. -d : (default) displays artefact based on input
+            2. --update : updates an existing artefact with the novel info' provided
+
     '''
 
     print(help)
@@ -261,16 +267,88 @@ def pickle_handle(file_path,method,d=None):
         return d
 
 
-def artefact_edit(path):
+def artefact_edit(flag='-d'):
 
-    path = './MNIST/Keras/artefacts.txt'
-    artefact = pickle_handle(path,'load')
-    # for key, value in zip(artefact.keys(),artefact.values()):
     
-    #     print(artefact)
+    '''
+    catalog read and select path pivoting on framwework and project name 
+
+    '''
+    catalog_path = '../catalog.csv'
+    catalog = pd.read_csv(catalog_path)
+    
+    while True:
+        fw = input('select framework 1) Keras 2) Pytorch  >> Enter: ') 
+        fw = 'Keras/' if fw == '1' else 'Pytorch/' if fw == '2' else 'Invalid'
+        if fw in list(catalog['framework']):
+            catalog = catalog[catalog['framework'] == fw]
+            print(f'{fw} Catalog ')
+            print(catalog)
+            break
+        else:
+            print('invalid framework name')
+            continue
+    print()
+    print('Project-List : ',list(catalog['project']))
+    while True:
+        prj = input('Enter project name : ')
+        if prj in list(catalog['project']):
+            catalog = catalog[catalog['project'] == prj]
+            print(f'{prj} Catalog')
+            print(catalog)
+            break
+        else:
+            print('Invalid Project Name (spell-check) : ') 
+            continue
+
+    path = catalog['path'].values[0].split('/')[2:]
+    path = os.path.join('./',*path)
+
+
+    print(f'Accessing Artefact archive of {fw}-{prj}')
+
+    artefact = pickle_handle(path,'load')
+    print(list(artefact.keys()))
+    if flag == '-d':
+        while True:
+            art_name = input('Enter Artifact to retreive info : ')
+            if art_name in list(artefact.keys()):
+                print('ARTEFACT - INFO')
+                print(f"{art_name} >> ",artefact[art_name])
+                break
+            else:
+                print()
+                print(f'Artefact - {art_name} is non-existent!')
+                continue
+
+    elif flag == '--update':
+        print(list(artefact.keys()))
+        while True:
+            art_name = input('Enter Artifact to retreive info : ')
+            if art_name in list(artefact.keys()):
+                print('ARTEFACT - INFO ( current ) ')
+                print(f"{art_name} >> ",artefact[art_name])
+                break
+            else:
+                print()
+                print(f'Artefact - {art_name} is non-existent!')
+                continue
+            
+        print(f'Updating Artefact Info for >> {art_name}')
+        info = input('New info : ')
+        artefact[art_name] = info
+        print('Variable Added to the Dictionary! -- saving state .. ')
+        pickle_handle(file_path=path,method='dump',d=artefact)
+
+        print('ARTEFACT - INFO ( Updated ) ')
+        print(f"{art_name} >> ",artefact[art_name])
+ 
+
 
 
 def main():
+
+     
 
     if sys.argv[1] == '-np':
         
@@ -399,18 +477,19 @@ def main():
 
     
     elif sys.argv[1] == '-ar':
-        artefact_edit('')
+        
+        if len(sys.argv) == 3:
+            if sys.argv[2] == '-d':
+                artefact_edit()
+            elif sys.argv[2] == '--update':
+                artefact_edit(flag=sys.argv[2])
+            else:
+                print('Invalid arg, try --help')
+        else:
+            artefact_edit()    
     
     
     
-    
-    
-    
-    elif len(sys.argv) == 1:
-
-        print('This Script Takes in Command-Line Arguments, triggering the functionalitied required, try --help for assistance')
-        exit(0)
-
 
 
 
@@ -419,8 +498,11 @@ def main():
 
 
 if __name__ == '__main__':
+
+    
+
     if len(sys.argv) == 1:
-        print('no command line arguments!, try --help')
+        print('This Script Takes in Command-Line Arguments to trigger the functionalitied required, try --help for assistance')
         exit(1)
     else:
         main()    
