@@ -31,3 +31,10 @@
   - Added Data collection procedure required for both Data Overview section and Model Evaluation
   - added doc string to pipeline script for the data collection procecure
 
+- **[2nd Feb, 2021]** _new patches and front-end improvements_ 
+
+    - pipeline script can now edit artefact files directly 
+    - added icon and tab name for the application
+    - added iteration log in the application
+    
+    
