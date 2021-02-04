@@ -40,12 +40,13 @@ Step-1 -
 import os
 path = '../samples/'
 overview_path = '../samples/overview.txt'
-eval_path  = '../samples/eval.txt'
+eval_path  = '../samples/evaluate.txt'
 
 if os.path.exists(path):
 
-    print('samples dir, exists.. \nchecking for dictionaries existence..')
-    if os.path.exists('./samples/overview.txt') and os.path.exists('./samples/eval.txt'):
+    print('samples dir, exists..checking for dictionaries existence..')
+
+    if os.path.exists(overview_path) and os.path.exists(eval_path):
         print('Data exists. no need of overwritting.')
     else:
         print("overview and eval doesn't exist, proceed to step-2")
