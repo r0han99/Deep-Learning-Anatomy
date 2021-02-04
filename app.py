@@ -12,6 +12,8 @@ import pickle
 import glob
 import re
 import os 
+# model evaluation
+from tensorflow.keras.models import load_model
 
 # '''
 # paths to the report files -- Dynamic 
@@ -37,7 +39,23 @@ def read_catalog(path):
     return catalog, paths, projects
 
 
-def model_eval(evaluate_path):
+def model_predict(model_path,x,true):
+    
+    try:
+        model = load_model(model_path)
+    except:
+        st.error('Keras does not exist!')
+    else:
+        predict = model.predict_classes(x)
+        st.markdown('Model Classifies this to be a {}'.format(predict[0]))
+        if predict[0] == true.argmax():
+            st.success('___Which is True___')
+        else:
+            st.error('___Which is False___')
+
+
+
+def model_eval(evaluate_path,project):
 
     
     st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Real-Time Model Evaluation</h3>",unsafe_allow_html=True)
@@ -49,38 +67,56 @@ def model_eval(evaluate_path):
             temp = f.read()
         test_data = pickle.loads(temp)
 
+
     except:
         st.warning('The file encapsulating the required sample data for the overview block is non-existent, try again later;')
 
     else:
-        rn_index = np.random.randint(0,50,1)
-        x,y,model = test_data.values()
         
+        # st.write(test_data['test_cases'][0].shape)
+        
+        x,y,model = test_data.values()
+        model_path = './Projects/' +project+'/'+'samples'+model
+
         expander = st.beta_expander('Evaluation type')
         control = expander.radio('choose',('Random Test-Case', 'Upload Test-Case'))
         st.markdown('***')
-        st.markdown(f'___{control}___')
-        
-        image_col, prompt_col = st.beta_columns(2)
         
         if control == 'Random Test-Case':
-            image_col.image(np.invert(x[rn_index]),caption='Label - ?', width=220)
-            ans = prompt_col.selectbox('What do you think this is?',("I don't know",f"It is target - {y[rn_index]}"))
+            header, generator = st.beta_columns(2)
+            header.markdown(f'___{control}___')
+            if generator.button('Generate random sample'):
             
-            st.markdown('***')
-            st.write('___Model Classification___')
+                image_col, prompt_col = st.beta_columns(2)
+                rn_index = np.random.randint(0,50,1)
+                image_col.image(x[rn_index],caption='random sample', width=220)
+                ans = prompt_col.markdown(f'True Target Class = `{y[rn_index].argmax()}`')
+                
+                st.markdown('***')
+                st.write('___Model Classification___')
 
-            # in future the eval_dict will contain paths to both keras model and pytorch model 
-            # so user can pick one from here 
+                # in future the eval_dict will contain paths to both keras model and pytorch model 
+                # so user can pick one from here 
+                
+                
+                model_predict(model_path,x[rn_index],y[rn_index])
+                
 
-            st.write(model)
+                
+
+            
 
         else:
+            st.warning('_Currently under development!_')
             image_file = st.file_uploader("Upload Image",type=['jpg', 'png', 'jpeg'])
-            st.image(image_file,width=220)
-            # st.write(model)
+            
+            if not image_file is None:
+                st.image(image_file,width=220)
+            
     
-        
+    st.markdown('***')
+    if st.checkbox('Note',False):
+        st.markdown('_Note, This Model evaluation block uses only keras encoded models for predictions, because it’s simpler to save model and reuse in Keras than in Pytorch -- which uses pretty unorthodox methodology to save and reuse models;_')
 
     
    
@@ -183,7 +219,6 @@ def cs_data(overview_path):
             # * Data.head at the end
 
             # '''
-
             pass
 
     
@@ -251,8 +286,8 @@ def cs_main():
             elif options == 'Data Overview':
                 cs_data(overview)
             elif options == 'Model Evaluation':
-                # later copy this piece of code and convert it into a subroutine
-                model_eval(evaluate)
+                
+                model_eval(evaluate,project)
         
         else:
             st.markdown("There are no traces of a _report.csv_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
