@@ -348,7 +348,8 @@ if __name__ == '__main__':
     cs_main()
     st.sidebar.markdown('***')
     
-    st.sidebar.markdown('''<h5 style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize; '> <a href="https://github.com/r0han99/Deep-Learning-Anatomy"><img src='data:image/png;base64,{}' style="width:42px;height:42px;"></a> Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: green;'>r0han<i></h5>'''.format(img_to_bytes("./pngs/GitHub.png")),unsafe_allow_html=True)
+    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b>'''.format(img_to_bytes("./pngs/GitHub.png")), unsafe_allow_html=True)
+
     st.sidebar.markdown('***')
     expander = st.sidebar.beta_expander('Iteration?')
     expander.markdown(' * ___Iteration-0 | `6th Feb, 2021`;___')
