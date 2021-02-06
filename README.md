@@ -16,6 +16,7 @@ and _Keras_
 
 _A progressive web application which holds all the Deep Learning Projects that I work on during the upcoming timeline. Post every project's completion all the meta-data unique to that deep learning model of a particular problem statement is dynamically collected, organised and byte-encoded into a file to establish the parameters of the project for future reference and a better comprehension of the project. This organised information from the file is then accessed and rendered on the web application deployed on the cloud for anyone to briefly absorb the concept behind the implementation. The application will also include a section, to allow  manual intervention of a user to try out the model in real-time with their input concerning the project. This entire application is a responsive catalog about all the project with dynamically changing information. The front-end aesthetics were facilitated by the Streamlit Library with absolute python codebase._
 
+[Flowchart](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/Deep-Learning-Anatomy.png) elucidating the _Sequence of Actions and Comms_ between the scripts inorder to fill this catalog with proper details.
 
 ## Project Catalogue 
 
