@@ -37,4 +37,12 @@
     - added icon and tab name for the application
     - added iteration log in the application
     
+- **[6th Feb, 2021]** _CIFAR-10 Keras, Deployment Ready_
+    
+    - patches for pipeline script on --state
+    - completed cifar-10 keras 
+    - edited app.py to incorporate changes
+    - added requirements.txt 
+    - *DEPLOYED ON STREAMLIT SHARE*
+    
     
