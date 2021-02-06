@@ -71,7 +71,7 @@ dimensions = x_train.shape
 targets = list(np.unique(y_train))
 #nd.array        
 data = x_train[0:3]
-#nd.array
+#nd.array or class_names
 labels = y_train[0:3]
 
 vars0 = ['kind','dimensions', 'targets', 'data', 'labels']
@@ -85,7 +85,7 @@ for x in vars0:
 
 # evaluate_dict 
 
-eval_dict = {'test_cases' : x_test[0:50], 'true': y_test[0:50],'model':'None ( model obj )'}
+eval_dict = {'test_cases' : x_test[0:50], 'true': y_test[0:50], class_names: None ,'model':'/model.h5'}
 
 
 # dump 1 
@@ -114,6 +114,8 @@ step - 2 - use the following snippet after fetching ../../pipeline -varl with 2
 
         except:
             param[val] = val
+
+    # check if anything is missing
 step - 3 - pickle dump 
 
     import pickle
@@ -124,7 +126,7 @@ step - 3 - pickle dump
 
 step - 4 - ./pipeline.py -np 
 
-    * relative path to the project ex - ./MNIST
+    * relative path to the project dir ex - ./MNIST
     * choose framework 
     * done!
  
