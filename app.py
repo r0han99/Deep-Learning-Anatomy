@@ -39,7 +39,7 @@ def read_catalog(path):
     return catalog, paths, projects
 
 
-def model_predict(model_path,x,true):
+def model_predict(model_path,x,true,class_names):
     
     try:
         model = load_model(model_path)
@@ -47,7 +47,10 @@ def model_predict(model_path,x,true):
         st.error('Keras does not exist!')
     else:
         predict = model.predict_classes(x)
-        st.markdown('Model Classifies this to be a {}'.format(predict[0]))
+        if class_names == None:
+            st.markdown('Model Classifies this to be a `{}`'.format(predict[0]))
+        else:
+            st.markdown('Model Classifies this to be a `{}`, a `{}`'.format(predict[0],class_names[predict[0]]))
         if predict[0] == true.argmax():
             st.success('___Which is True___')
         else:
@@ -75,8 +78,19 @@ def model_eval(evaluate_path,project):
         
         # st.write(test_data['test_cases'][0].shape)
         
-        x,y,model = test_data.values()
+        # x,y,model = test_data.values()
+        # x = test_data['']
+        x = test_data['test_cases']
+        y = test_data['true']
+        model = test_data['model']
+
+        # st.write(test_data.keys())
         model_path = './Projects/' +project+'/'+'samples'+model
+
+        try:
+            class_names = test_data['class_names']
+        except:
+            class_names = None
 
         expander = st.beta_expander('Evaluation type')
         control = expander.radio('choose',('Random Test-Case', 'Upload Test-Case'))
@@ -90,7 +104,10 @@ def model_eval(evaluate_path,project):
                 image_col, prompt_col = st.beta_columns(2)
                 rn_index = np.random.randint(0,50,1)
                 image_col.image(x[rn_index],caption='random sample', width=220)
-                ans = prompt_col.markdown(f'True Target Class = `{y[rn_index].argmax()}`')
+                if class_names == None:
+                    ans = prompt_col.markdown(f'True Target Class = `{y[rn_index].argmax()}`')
+                else:
+                    ans = prompt_col.markdown(f'True Target Class = `{y[rn_index].argmax()}`, a `{class_names[y[rn_index].argmax()]}`')
                 
                 st.markdown('***')
                 st.write('___Model Classification___')
@@ -99,7 +116,7 @@ def model_eval(evaluate_path,project):
                 # so user can pick one from here 
                 
                 
-                model_predict(model_path,x[rn_index],y[rn_index])
+                model_predict(model_path,x[rn_index],y[rn_index],class_names)
                 
 
                 
@@ -133,9 +150,10 @@ def cs_body(report,project,framework):
     with open('./prompt-list.txt', 'rb') as f:
         data = f.read() 
     d = pickle.loads(data)
-
-    # st.write(cols)
     
+    
+    # st.write(report.keys())
+    # st.write(d)
 
     for i,col in enumerate(cols):
         st.markdown(d[i])
@@ -153,7 +171,8 @@ def cs_body(report,project,framework):
 
     expander = st.beta_expander('Source-Code')
     expander.markdown('_Ipynb_ translated into _PDF_ using _LaTeX_')
-    expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64>]({}) <small style='color:blue;'><i>Download</i></small>'''.format(img_to_bytes('./ipynb.png'),pdf_url), unsafe_allow_html=True)
+    expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64>]({}) <small style='color:blue;'><i>Download</i></small>'''.format(img_to_bytes('./pngs/ipynb.png'),pdf_url), unsafe_allow_html=True)
+    expander.markdown('***')
     if expander.checkbox('Note'):
         expander.markdown('_"This link is a dynamically generated link, if this is a non-existent url, it is possible to traceback a 404 error, please visit the main repository for more info."_')
         
@@ -229,10 +248,10 @@ def cs_data(overview_path):
 
 def cs_main():
     
-    st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./brain.png",layout="centered",initial_sidebar_state="auto",)
+    st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./pngs/brain.png",layout="centered",initial_sidebar_state="auto",)
    
     tagline = 'A pragmatic approach to attain the Deep Learning Knowledge'
-    st.markdown('''<h1 style='text-align:center;'>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("deep-learning.png"),tagline),unsafe_allow_html=True)
+    st.markdown('''<h1 style='text-align:center;'>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("./pngs/deep-learning.png"),tagline),unsafe_allow_html=True)
     st.markdown('<hr style="height:2px;border-width:0;color:gray;background-color:gray">',unsafe_allow_html=True)
     st.sidebar.markdown("<h2 style='font-family:BioRhyme; '>Project Catalog 📓</h2>",unsafe_allow_html=True)
     st.sidebar.markdown('***')
@@ -241,8 +260,9 @@ def cs_main():
     catalog_path = './catalog.csv'
     if os.path.exists(catalog_path):
         catalog, paths, projects = read_catalog(catalog_path) # read paths 
-        project = st.sidebar.selectbox('Project',projects, key='project-name')  
-        framework  = st.sidebar.radio("Framework", ("Pytorch", "Keras"), key='Deep-Learning-frameworks') 
+        
+        project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
+        framework  = st.sidebar.radio("Framework", ("Keras", "Pytorch"), key='Deep-Learning-frameworks')
 
         # for data-overview and eval
         overview = os.path.join('./Projects', project, 'samples','overview.txt')
@@ -257,40 +277,46 @@ def cs_main():
 
         if not catalog_fw.empty:
             slice_ = catalog_fw[catalog_fw['project'] == project]
-             # report df 
-            with open(slice_['path'].values[0],'rb') as f:
-                data = f.read()
-            
-            report = pickle.loads(data)
-
-
-            temp_desc = report['desc']
-            st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project),unsafe_allow_html=True)
-            st.markdown('**Description** ~ _{}_'.format(temp_desc))
-            st.markdown('**Implementation** ~ ___{}___'.format(framework))
-            
-            st.markdown('***')
-
-            radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
-
-            st.sidebar.markdown('***') # sidebar section break
-
-            options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
-
-            
-
-            if options == 'Project Artefacts':
-                cs_body(report,project,framework)
-            elif options == 'Plots':
-                cs_plots(report)
-            elif options == 'Data Overview':
-                cs_data(overview)
-            elif options == 'Model Evaluation':
+            if not slice_.empty:
+                # st.write(slice_)
+                #  report df 
+                with open(slice_['path'].values[0],'rb') as f:
+                    data = f.read()
                 
-                model_eval(evaluate,project)
-        
+                report = pickle.loads(data)
+                temp_desc = report['desc']
+                st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project),unsafe_allow_html=True)
+                st.markdown('**Description** ~ _{}_'.format(temp_desc))
+                st.markdown('**Implementation** ~ ___{}___'.format(framework))
+                
+                st.markdown('***')
+
+                radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
+
+                st.sidebar.markdown('***') # sidebar section break
+
+                options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
+
+                
+
+                if options == 'Project Artefacts':
+                    cs_body(report,project,framework)
+                elif options == 'Plots':
+                    cs_plots(report)
+                elif options == 'Data Overview':
+                    cs_data(overview)
+                elif options == 'Model Evaluation':
+                    
+                    model_eval(evaluate,project)
+            
+            else:
+                st.error(f"{framework}'s Version of {project} doesn't exist in the catalog.")
+
+
+
+            
         else:
-            st.markdown("There are no traces of a _report.csv_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
+            st.markdown("There are no traces of a _Artefacts.txt_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
 
        
         
@@ -304,13 +330,10 @@ def cs_main():
 
     # if catalog.csv doesn't exist
     else:
-        st.warning("There's a possibility that the repository is corrupted -- required catalog for initiation is non-existent. run pipline script to establish catalog.")
+        st.warning("There's a possibility that the repository is corrupted -- required catalog for app-initiation is non-existent. run pipline script to establish catalog.")
     
     
     
-    
-    
-        
         
     
     
@@ -325,13 +348,13 @@ if __name__ == '__main__':
     cs_main()
     st.sidebar.markdown('***')
     
-    st.sidebar.markdown("<h5 style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize; '> ∑ Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: green;'>r0han<i></h5>",unsafe_allow_html=True)
+    st.sidebar.markdown('''<h5 style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize; '> <a href="https://github.com/r0han99/Deep-Learning-Anatomy"><img src='data:image/png;base64,{}' style="width:42px;height:42px;"></a> Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: green;'>r0han<i></h5>'''.format(img_to_bytes("./pngs/GitHub.png")),unsafe_allow_html=True)
     st.sidebar.markdown('***')
     expander = st.sidebar.beta_expander('Iteration?')
-    expander.markdown(' * `Iteration-0 | 2nd Feb, 2021;`')
+    expander.markdown(' * ___Iteration-0 | `6th Feb, 2021`;___')
     expander.markdown('***')
     
-    expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./tesseract.png')), unsafe_allow_html=True)
+    expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     # st.sidebar.markdown('''''')
     
     
