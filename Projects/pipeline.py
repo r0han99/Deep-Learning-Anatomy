@@ -104,7 +104,7 @@ step - 2 - use the following snippet after fetching ../../pipeline -varl with 2
     example: 
     var = ['desc','project_name', 'framework','prediction_type','network_type',
     'architecture','layers','hidden_units','activations','epochs',
-    'metrics','train_accuracy','test_accuracy','classification_report','elapsed','summary'
+    'metrics','loss','optimiser','learning_rate','batch_size','train_performace','test_performance','classification_report','elapsed','summary'
     ,'ipynb','plots']
     param = {}
     for val in var:
@@ -309,8 +309,9 @@ def artefact_edit(flag='-d'):
     print(f'Accessing Artefact archive of {fw}-{prj}')
 
     artefact = pickle_handle(path,'load')
-    print(list(artefact.keys()))
+    
     if flag == '-d':
+        print(list(artefact.keys()))
         while True:
             art_name = input('Enter Artifact to retreive info : ')
             if art_name in list(artefact.keys()):
