@@ -101,28 +101,30 @@ with open(eval_path,'wb') as f:
 MAIN- 
 step - 1, use ../../pipline -varl with 1 to get the var-dict to show the variables to be filled with 
 step - 2 - use the following snippet after fetching ../../pipeline -varl with 2 
-    example: 
-    var = ['desc','project_name', 'framework','prediction_type','network_type',
-    'architecture','layers','hidden_units','activations','epochs',
-    'metrics','loss','optimiser','learning_rate','batch_size','train_performace','test_performance','classification_report','elapsed','summary'
-    ,'ipynb','plots']
-    param = {}
-    for val in var:
+    code: 
 
-        try: 
-            param[val] = eval(val)
+var = ['desc','project_name', 'framework','prediction_type','network_type',
+'architecture','layers','hidden_units','activations','epochs',
+'metrics','loss','optimiser','learning_rate','batch_size','train_performance','test_performance','classification_report','elapsed','summary'
+,'ipynb','plots']
+param = {}
+for val in var:
 
-        except:
-            param[val] = val
+    try: 
+        param[val] = eval(val)
+
+    except:
+        param[val] = val
 
     # check if anything is missing
+
 step - 3 - pickle dump 
 
-    import pickle
-    file = open("artefacts.txt", "wb") 
-    dictionary = param 
-    pickle.dump(dictionary, file) 
-    file.close() 
+import pickle
+file = open("artefacts.txt", "wb") 
+dictionary = param 
+pickle.dump(dictionary, file) 
+file.close() 
 
 step - 4 - ./pipeline.py -np 
 
