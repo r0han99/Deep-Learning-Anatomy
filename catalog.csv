@@ -2,3 +2,4 @@ date,project,framework,path
 30-Saturday (2021),MNIST,Pytorch/,./Projects/MNIST/Pytorch/artefacts.txt
 30-Saturday (2021),MNIST,Keras/,./Projects/MNIST/Keras/artefacts.txt
 06-Saturday (2021),CIFAR10,Keras/,./Projects/CIFAR10/Keras/artefacts.txt
+09-Tuesday (2021),CIFAR10,Pytorch/,./Projects/CIFAR10/Pytorch/artefacts.txt

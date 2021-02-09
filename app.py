@@ -15,12 +15,7 @@ import os
 # model evaluation
 from tensorflow.keras.models import load_model
 
-# '''
-# paths to the report files -- Dynamic 
-# pytorch = ?
-# keras = ?  
 
-# '''
 
 
 # image encoding 
@@ -284,8 +279,10 @@ def cs_main():
                     data = f.read()
                 
                 report = pickle.loads(data)
+                
+                project_name = report['project_name']
                 temp_desc = report['desc']
-                st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project),unsafe_allow_html=True)
+                st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
                 st.markdown('**Description** ~ _{}_'.format(temp_desc))
                 st.markdown('**Implementation** ~ ___{}___'.format(framework))
                 
