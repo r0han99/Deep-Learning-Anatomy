@@ -149,7 +149,8 @@ def docs():
 
 Arguments - Description
 
-    -np : New project creation
+    -np [path-to-project]: New project creation
+    -nptr [path-to-project]: tranfer learning projects
     -varl or --var-list [optional] : prints variable/artifact list or dictionary with datatypes 
         * [optional]
 
