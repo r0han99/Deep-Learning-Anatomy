@@ -24,14 +24,6 @@ def img_to_bytes(img_path):
     encoded = base64.b64encode(img_bytes).decode()
     return encoded
 
-# @st.cache(persist=True)
-def read_catalog(path):
-    
-    catalog = pd.read_csv(path)
-    paths = list(catalog['path'])
-    projects = list(catalog['project'].unique())
-    
-    return catalog, paths, projects
 
 
 def model_predict(model_path,x,true,class_names):
@@ -43,17 +35,17 @@ def model_predict(model_path,x,true,class_names):
     else:
         predict = model.predict_classes(x)
         if class_names == None:
-            st.markdown('Model Classifies this to be a `{}`'.format(predict[0]))
+            st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
         else:
-            st.markdown('Model Classifies this to be a `{}`, a `{}`'.format(predict[0],class_names[predict[0]]))
+            st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
         if predict[0] == true.argmax():
-            st.success('___Which is True___')
+            st.success('___Which is True!___')
         else:
             st.error('___Which is False___')
 
 
 
-def model_eval(evaluate_path,project):
+def model_eval(evaluate_path,project,nn_type):
 
     
     st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Real-Time Model Evaluation</h3>",unsafe_allow_html=True)
@@ -80,7 +72,12 @@ def model_eval(evaluate_path,project):
         model = test_data['model']
 
         # st.write(test_data.keys())
-        model_path = './Projects/' +project+'/'+'samples'+model
+        if not nn_type == 'Transfer Learning':
+            model_path = './Projects/' +project+'/'+'samples'+model
+        else:
+            model_path = './Projects/'+'Transfer-Learning/'+project+'/'+'samples'+model
+
+        
 
         try:
             class_names = test_data['class_names']
@@ -254,24 +251,97 @@ def cs_main():
 
     catalog_path = './catalog.csv'
     if os.path.exists(catalog_path):
-        catalog, paths, projects = read_catalog(catalog_path) # read paths 
         
-        project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
-        framework  = st.sidebar.radio("Framework", ("Keras", "Pytorch"), key='Deep-Learning-frameworks')
-
-        # for data-overview and eval
-        overview = os.path.join('./Projects', project, 'samples','overview.txt')
+        catalog = pd.read_csv(catalog_path)
+        types = list(catalog['type'].unique())
         
-        evaluate = os.path.join('./Projects', project, 'samples','evaluate.txt')
+        nn_type = st.sidebar.selectbox('Approach',types,key='nn-type')
+        catalog = catalog[catalog['type'] == nn_type]
+        paths = list(catalog['path'])
+        projects = list(catalog['project'].unique())
+        # catalog, paths, projects, types = read_catalog(catalog_path,nn_type) # read paths 
+
+        if nn_type == 'CNN':
+            
+            catalog = catalog[catalog['type'] == nn_type]
+            project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
+            framework  = st.sidebar.radio("Framework", ("Keras", "Pytorch"), key='Deep-Learning-frameworks')
+
+            # for data-overview and eval
+            overview = os.path.join('./Projects', project, 'samples','overview.txt')
+            evaluate = os.path.join('./Projects', project, 'samples','evaluate.txt')
 
 
-        # catalog according to framework
-        catalog_fw = catalog[catalog['framework'] == framework+'/']
+            # catalog according to framework
+            catalog_fw = catalog[catalog['framework'] == framework+'/']
+            
+            # st.write(catalog_fw)
+
+            if not catalog_fw.empty:
+                slice_ = catalog_fw[catalog_fw['project'] == project]
+                if not slice_.empty:
+                    # st.write(slice_)
+                    #  report df 
+                    with open(slice_['path'].values[0],'rb') as f:
+                        data = f.read()
+                    
+                    report = pickle.loads(data)
+                    
+                    project_name = report['project_name']
+                    temp_desc = report['desc']
+                    st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
+                    st.markdown('**Description** ~ _{}_'.format(temp_desc))
+                    st.markdown('**Implementation** ~ ___{}___'.format(framework))
+                    
+                    st.markdown('***')
+
+                    radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
+
+                    st.sidebar.markdown('***') # sidebar section break
+
+                    options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
+
+                    if options == 'Project Artefacts':
+                        cs_body(report,project,framework)
+                    elif options == 'Plots':
+                        cs_plots(report)
+                    elif options == 'Data Overview':
+                        cs_data(overview)
+                    elif options == 'Model Evaluation':
+                        
+                        model_eval(evaluate,project,nn_type)
+                
+                else:
+                    st.error(f"{framework}'s Version of {project} doesn't exist in the catalog.")
+
+
+
+                
+            else:
+                st.markdown("There are no traces of a _Artefacts.txt_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
+
         
-        # st.write(catalog_fw)
+            
 
-        if not catalog_fw.empty:
-            slice_ = catalog_fw[catalog_fw['project'] == project]
+            st.markdown('***')
+        
+       
+        elif nn_type == 'Transfer Learning':
+            catalog = catalog[catalog['type'] == nn_type]
+
+            # st.write(catalog)
+            projects = list(catalog['project'])
+            
+            # projects list
+            project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
+            framework = catalog['framework'].values[0][:-1]
+            
+            # for data-overview and eval
+            overview = os.path.join('./Projects','Transfer-Learning' ,project, 'samples','overview.txt')
+            evaluate = os.path.join('./Projects','Transfer-Learning' ,project, 'samples','evaluate.txt')
+            
+            
+            slice_ = catalog[catalog['project'] == project]
             if not slice_.empty:
                 # st.write(slice_)
                 #  report df 
@@ -284,17 +354,18 @@ def cs_main():
                 temp_desc = report['desc']
                 st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
                 st.markdown('**Description** ~ _{}_'.format(temp_desc))
-                st.markdown('**Implementation** ~ ___{}___'.format(framework))
+                st.markdown('**Implementation** ~ ___{}___ '.format(framework))
                 
                 st.markdown('***')
+
+                # st.write(report)
+
 
                 radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
 
                 st.sidebar.markdown('***') # sidebar section break
 
                 options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
-
-                
 
                 if options == 'Project Artefacts':
                     cs_body(report,project,framework)
@@ -304,25 +375,10 @@ def cs_main():
                     cs_data(overview)
                 elif options == 'Model Evaluation':
                     
-                    model_eval(evaluate,project)
+                    model_eval(evaluate,project,nn_type)
             
-            else:
-                st.error(f"{framework}'s Version of {project} doesn't exist in the catalog.")
-
-
-
             
-        else:
-            st.markdown("There are no traces of a _Artefacts.txt_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
-
-       
-        
-
-        st.markdown('***')
-        
-       
-        
-       
+            
 
 
     # if catalog.csv doesn't exist
