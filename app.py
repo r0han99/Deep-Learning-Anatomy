@@ -27,17 +27,18 @@ def img_to_bytes(img_path):
 
 
 def model_predict(model_path,x,true,class_names):
-
-        model = load_model(model_path)
-        predict = model.predict_classes(x)
-        if class_names == None:
-            st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
-        else:
-            st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
-        if predict[0] == true.argmax():
-            st.success('___Which is True!___')
-        else:
-            st.error('___Which is False___')
+        
+        st.write(model_path)
+#         model = load_model(model_path)
+#         predict = model.predict_classes(x)
+#         if class_names == None:
+#             st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+#         else:
+#             st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
+#         if predict[0] == true.argmax():
+#             st.success('___Which is True!___')
+#         else:
+#             st.error('___Which is False___')
             
 #     try:
         
