@@ -27,12 +27,8 @@ def img_to_bytes(img_path):
 
 
 def model_predict(model_path,x,true,class_names):
-    
-    try:
+
         model = load_model(model_path)
-    except:
-        st.error('Keras does not exist!')
-    else:
         predict = model.predict_classes(x)
         if class_names == None:
             st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
@@ -42,6 +38,12 @@ def model_predict(model_path,x,true,class_names):
             st.success('___Which is True!___')
         else:
             st.error('___Which is False___')
+            
+#     try:
+        
+#     except:
+#         st.error('Keras does not exist!')
+#     else:
 
 
 
