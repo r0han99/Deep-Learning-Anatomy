@@ -45,4 +45,13 @@
     - added requirements.txt 
     - *DEPLOYED ON STREAMLIT SHARE*
     
+***
+
+## Post Deployment ChangeLog 
+
+- **[11 Feb, 2021]** _Transfer Learning Section + Galaxy-Classifier-InceptionV3_
     
+    - patched pipeline to incorporate transfer learning project creations 
+    - implemented galaxy classifier using transfer learning on pretrained network inceptionV3_ 
+    - pdf url creation is now completely dynamic based on the artefacts dict
+   
