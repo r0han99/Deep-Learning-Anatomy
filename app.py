@@ -27,25 +27,28 @@ def img_to_bytes(img_path):
 
 
 def model_predict(model_path,x,true,class_names):
-        
-        st.write(model_path)
-        model = load_model(model_path)
-#         predict = model.predict_classes(x)
-#         if class_names == None:
-#             st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
-#         else:
-#             st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
-#         if predict[0] == true.argmax():
-#             st.success('___Which is True!___')
-#         else:
-#             st.error('___Which is False___')
-            
-#     try:
-        
-#     except:
-#         st.error('Keras does not exist!')
-#     else:
+    
+    
+    try:
+        if not model_path == None:
+            model = load_model(model_path)
+        else:
+            st.warning('Pre-trained Models are quite large to be stored in the repository') 
+    except:
+        st.error('Keras does not exist!')
+    else:
 
+        predict = model.predict_classes(x)
+        if class_names == None:
+            st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+        else:
+            st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
+        if predict[0] == true.argmax():
+            st.success('___Which is True!___')
+        else:
+            st.error('___Which is False___')
+            
+    
 
 
 def model_eval(evaluate_path,project,nn_type):
@@ -79,6 +82,7 @@ def model_eval(evaluate_path,project,nn_type):
             model_path = './Projects/' +project+'/'+'samples'+model
         else:
             model_path = './Projects/'+'Transfer-Learning/'+project+'/'+'samples'+model
+            model_path = None
 
         st.write(model_path)
         st.write(os.path.exists(model_path))
