@@ -1,5 +1,7 @@
-date,project,framework,path
-30-Saturday (2021),MNIST,Pytorch/,./Projects/MNIST/Pytorch/artefacts.txt
-30-Saturday (2021),MNIST,Keras/,./Projects/MNIST/Keras/artefacts.txt
-06-Saturday (2021),CIFAR10,Keras/,./Projects/CIFAR10/Keras/artefacts.txt
-09-Tuesday (2021),CIFAR10,Pytorch/,./Projects/CIFAR10/Pytorch/artefacts.txt
+date,project,framework,type,path
+11-Thursday (2021),MNIST,Pytorch/,CNN,./Projects/MNIST/Pytorch/artefacts.txt
+11-Thursday (2021),MNIST,Keras/,CNN,./Projects/MNIST/Keras/artefacts.txt
+11-Thursday (2021),CIFAR10,Pytorch/,CNN,./Projects/CIFAR10/Pytorch/artefacts.txt
+11-Thursday (2021),CIFAR10,Keras/,CNN,./Projects/CIFAR10/Keras/artefacts.txt
+
+11-Thursday (2021),galaxy-classifier,Keras/,Transfer Learning,./Projects/Transfer-Learning/galaxy-classifier/artefacts.txt

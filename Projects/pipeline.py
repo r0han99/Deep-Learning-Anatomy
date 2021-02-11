@@ -175,7 +175,7 @@ Arguments - Description
     print(help)
 
 
-def meta_collect(project_path,project_name,fw):
+def meta_collect(project_path,project_name,fw,nntype):
     date = datetime.datetime.now().strftime('%d-%A (%Y)')
     '''
 
@@ -196,22 +196,22 @@ def meta_collect(project_path,project_name,fw):
         d = pickle.loads(data) 
         # report = pd.DataFrame(pd.Series(d)).T
 
-        dev = '../catalog1.csv'
+        # dev = '../catalog1.csv'
         main= '../catalog.csv'
 
         print('Updating Catalog .. ')
         if not os.path.exists(main):
             print('No catalog file in existence, creating one, writing content..')
             with open(main,'w') as f:
-                f.write('{},{},{},{}\n'.format('date','project','framework','path'))
+                f.write('{},{},{},{},{}\n'.format('date','project','framework','type','path'))
             # write content
             with open(main,'a+') as f:
-                f.write('{},{},{},{}\n'.format(date,project_name,fw,'./Projects/'+project_path[2:]+'artefacts.txt'))
+                f.write('{},{},{},{},{}\n'.format(date,project_name,fw,nntype,'./Projects/'+project_path[2:]+'artefacts.txt'))
                 print('Done!')
         
         else:
             with open(main,'a+') as f:
-                f.write('{},{},{},{}\n'.format(date,project_name,fw,'./Projects/'+project_path[2:]+'artefacts.txt'))
+                f.write('{},{},{},{},{}\n'.format(date,project_name,fw,nntype,'./Projects/'+project_path[2:]+'artefacts.txt'))
             
             print('Done!')
 
@@ -285,6 +285,7 @@ def artefact_edit(flag='-d'):
     while True:
         fw = input('select framework 1) Keras 2) Pytorch  >> Enter: ') 
         fw = 'Keras/' if fw == '1' else 'Pytorch/' if fw == '2' else 'Invalid'
+        
         if fw in list(catalog['framework']):
             catalog = catalog[catalog['framework'] == fw]
             print(f'{fw} Catalog ')
@@ -364,14 +365,16 @@ def main():
                 project_name = sys.argv[2].split('/')[1]
                 print('Project Directory - {}'.format(project_name))
                 project_path,fw = path_creation(abs_path)
-                
-                meta_collect(project_path,project_name,fw) # Data collection subroutine 
+                nntype = input('Enter Approach Type >>  ')
+
+                meta_collect(project_path,project_name,fw,nntype) # Data collection subroutine 
         
         except:
             print("There's no Absolute Path given in the arguments! ")
             
             while(True):
                 abs_path = input('Enter the Name of Directory : ')
+                nntype = input('Enter Approach Type >>  ')
                 if os.path.isdir(abs_path):
                     try:
                         project_name = abs_path.split('/')[1]
@@ -389,8 +392,25 @@ def main():
 
                 # Data collection subroutine 
             project_path,fw = path_creation(abs_path)
-            meta_collect(project_path,project_name,fw)
+            meta_collect(project_path,project_name,fw,nntype)
                 
+    elif sys.argv[1] == '-nptr':
+        print('Transfer-Learning')
+        if len(sys.argv) == 3: 
+                abs_path = sys.argv[2]
+                project_name = sys.argv[2].split('/')[1]
+                print('Project Directory - {}'.format(project_name))
+                prj_path = os.path.join('./Transfer-Learning',project_name+'/')
+                if os.path.exists(prj_path):
+                    print(f'Relative Path {prj_path}')
+                    nntype = input('Enter Approach Type >>  ')
+                    fw = input('select framework 1) Keras 2) Pytorch  >> Enter: ') 
+                    fw = 'Keras/' if fw == '1' else 'Pytorch/' if fw == '2' else 'Invalid'
+                else:
+                    print("project directory doesn't exist! [check-dir-name]")
+                    exit(1)               
+                
+                meta_collect(prj_path,project_name,fw,nntype)
 
            
     elif sys.argv[1] == '-varl' or sys.argv[1] == '--var-list':
