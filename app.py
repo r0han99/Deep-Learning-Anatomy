@@ -78,6 +78,7 @@ def model_eval(evaluate_path,project,nn_type):
             model_path = './Projects/'+'Transfer-Learning/'+project+'/'+'samples'+model
 
         st.write(model_path)
+        st.write(os.path.exists(model_path))
         
         
 
