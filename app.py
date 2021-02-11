@@ -28,25 +28,30 @@ def img_to_bytes(img_path):
 
 def model_predict(model_path,x,true,class_names):
     
-    
-    try:
-        if not model_path == None:
+    if not model_path == None:
+        
+        
+        try:
             model = load_model(model_path)
+        
+        except:
+            st.error('Keras does not exist!')
         else:
-            st.warning('Pre-trained Models are quite large to be stored in the repository') 
-    except:
-        st.error('Keras does not exist!')
-    else:
 
-        predict = model.predict_classes(x)
-        if class_names == None:
-            st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
-        else:
-            st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
-        if predict[0] == true.argmax():
-            st.success('___Which is True!___')
-        else:
-            st.error('___Which is False___')
+            predict = model.predict_classes(x)
+            if class_names == None:
+                st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+            else:
+                st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
+            if predict[0] == true.argmax():
+                st.success('___Which is True!___')
+            else:
+                st.error('___Which is False___')
+
+    else:
+        st.warning('___Pre-trained Models are quite large to be stored in the repository. finding an alternative, which will be out for the next iteration of this Application___') 
+    
+    
             
     
 
