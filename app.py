@@ -144,7 +144,8 @@ def model_eval(evaluate_path,project,nn_type):
     
 def cs_body(report,project,framework):
 
-    pdf_url = 'https://github.com/r0han99/Deep-Learning-Anatomy/raw/main/Projects/' + project + '/' + framework + '/' + project+'-'+framework + '.pdf'
+    pdf_url = 'https://github.com/r0han99/Deep-Learning-Anatomy/raw/main/' + report['ipynb'][1:]
+
 
     cols = list(report.keys())[3:-3]
     # report.fillna('None',inplace=True)
