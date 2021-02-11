@@ -1,4 +1,4 @@
-# The Deep Learning Anatomy [<img src="./pngs/deep-learning.png" width="40" >](https://share.streamlit.io/r0han99/deep-learning-anatomy/main/app.py)
+# The Deep Learning Anatomy [<img src="./pngs/deep-learning.png" width="36" >](https://share.streamlit.io/r0han99/deep-learning-anatomy/main/app.py)
 
 A Comprehensive **Deep Learning** _Project Catalogue_ holding sophisticated details of a project implmented using both _Pytorch_
 and _Keras_ 
@@ -63,7 +63,7 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
   - added download-link to the source-code pdf
   - cs_plots() will render the plots related/included in a particular project
 
-[continuation...](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/changelog.md) ( _last-date in changelog - [6th Feb, 2021]_ )
+[continuation...](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/changelog.md) ( _last-date in changelog - [11th Feb, 2021]_ )
 
 
 ***
