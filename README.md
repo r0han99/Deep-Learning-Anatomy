@@ -3,11 +3,9 @@
 A Comprehensive **Deep Learning** _Project Catalogue_ holding sophisticated details of a project implmented using both _Pytorch_
 and _Keras_ 
 
-![dl-banner](https://user-images.githubusercontent.com/45916202/105623232-3aa7f080-5e3e-11eb-8caa-478302027063.jpg)
+<img width="1150" alt="banner-trans-l" src="https://user-images.githubusercontent.com/45916202/107805596-91448280-6d8b-11eb-9916-bb6967b6775e.png">
 
 
-
-```A Deep Neural Network```
 
 ***
 
