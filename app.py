@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 # os dependencies
 from pathlib import Path
-# import datetime
 import base64
 import pickle
 import glob
@@ -303,9 +302,9 @@ def cs_main():
                     st.markdown('''<h3 style='font-family: BioRhyme'> Description :</h3> <i>{}<i>'''.format(temp_desc),unsafe_allow_html=True)
                     
                     if framework == 'Keras':
-                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
+                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
                     else:
-                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
+                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
                     # st.markdown('**Implementation** ~ ___{}___'.format(framework))
                     
                     st.markdown('***')
