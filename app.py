@@ -44,7 +44,8 @@ def model_predict(model_path,x,true,class_names,nn_type):
                 st.success('___Which is True!___')
             else:
                 st.error('___Which is False___')
-     else:
+    else:
+        
         st.warning('___Saved Model states (.h5 file) for any transfer learning project is huge compared to the normal ones. Large files cannot be pushed on to GitHub repositories in a normal git-commit workflow. Working on Alternatives to make this section up and running.___')
         
 
