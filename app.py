@@ -28,32 +28,21 @@ def img_to_bytes(img_path):
 
 def model_predict(model_path,x,true,class_names):
     
-    if not model_path == None:
-        
-        
-        try:
-            model = load_model(model_path)
-        
-        except:
-            st.error('Keras does not exist!')
-        else:
-
-            predict = model.predict_classes(x)
-            if class_names == None:
-                st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
-            else:
-                st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
-            if predict[0] == true.argmax():
-                st.success('___Which is True!___')
-            else:
-                st.error('___Which is False___')
-
+    try:
+        model = load_model(model_path)
+    except:
+        st.error('Keras does not exist!')
     else:
-        st.warning('___Pre-trained Models are quite large to be stored in the repository. finding an alternative, which will be out for the next iteration of this Application___') 
-    
-    
-            
-    
+        predict = model.predict_classes(x)
+        if class_names == None:
+            st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+        else:
+            st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
+        if predict[0] == true.argmax():
+            st.success('___Which is True!___')
+        else:
+            st.error('___Which is False___')
+
 
 
 def model_eval(evaluate_path,project,nn_type):
@@ -87,8 +76,8 @@ def model_eval(evaluate_path,project,nn_type):
             model_path = './Projects/' +project+'/'+'samples'+model
         else:
             model_path = './Projects/'+'Transfer-Learning/'+project+'/'+'samples'+model
-            model_path = None
 
+            
         
 
         try:
@@ -144,8 +133,7 @@ def model_eval(evaluate_path,project,nn_type):
     
 def cs_body(report,project,framework):
 
-    pdf_url = 'https://github.com/r0han99/Deep-Learning-Anatomy/raw/main/' + report['ipynb'][2:]
-
+    pdf_url = 'https://github.com/r0han99/Deep-Learning-Anatomy/raw/main/Projects/' + project + '/' + framework + '/' + project+'-'+framework + '.pdf'
 
     cols = list(report.keys())[3:-3]
     # report.fillna('None',inplace=True)
@@ -256,7 +244,7 @@ def cs_main():
     st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./pngs/brain.png",layout="centered",initial_sidebar_state="auto",)
    
     tagline = 'A pragmatic approach to attain the Deep Learning Knowledge'
-    st.markdown('''<h1 style='text-align:center;'>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("./pngs/deep-learning.png"),tagline),unsafe_allow_html=True)
+    st.markdown('''<h1 style='text-align:center; font-weight:bold; color:black;'>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("./pngs/deep-learning.png"),tagline),unsafe_allow_html=True)
     st.markdown('<hr style="height:2px;border-width:0;color:gray;background-color:gray">',unsafe_allow_html=True)
     st.sidebar.markdown("<h2 style='font-family:BioRhyme; '>Project Catalog 📓</h2>",unsafe_allow_html=True)
     st.sidebar.markdown('***')
@@ -273,6 +261,9 @@ def cs_main():
         paths = list(catalog['path'])
         projects = list(catalog['project'].unique())
         # catalog, paths, projects, types = read_catalog(catalog_path,nn_type) # read paths 
+        
+        
+        
 
         if nn_type == 'CNN':
             
@@ -302,9 +293,14 @@ def cs_main():
                     
                     project_name = report['project_name']
                     temp_desc = report['desc']
-                    st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
-                    st.markdown('**Description** ~ _{}_'.format(temp_desc))
-                    st.markdown('**Implementation** ~ ___{}___'.format(framework))
+                    st.markdown("<h3 style='font-family: BioRhyme'>Project Title : <bold><strong style='color:#E45E18; padding-left:20px;'>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
+                    st.markdown('''<h3 style='font-family: BioRhyme'> Description :</h3> <i>{}<i>'''.format(temp_desc),unsafe_allow_html=True)
+                    
+                    if framework == 'Keras':
+                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
+                    else:
+                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
+                    # st.markdown('**Implementation** ~ ___{}___'.format(framework))
                     
                     st.markdown('***')
 
@@ -365,9 +361,13 @@ def cs_main():
                 
                 project_name = report['project_name']
                 temp_desc = report['desc']
-                st.markdown("<h3 style='font-family: century gothic'>Project Title : <bold><strong>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
-                st.markdown('**Description** ~ _{}_'.format(temp_desc))
-                st.markdown('**Implementation** ~ ___{}___ '.format(framework))
+                st.markdown("<h3 style='font-family: Lexend Mega;'>Project Title : <bold><strong style='color:#E45E18; padding-left:20px;'>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
+                st.markdown('''<h3 style='font-family: BioRhyme'> Description :</h3> <i>{}<i>'''.format(temp_desc),unsafe_allow_html=True)
+                    
+                if framework == 'Keras':
+                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
+                else:
+                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
                 
                 st.markdown('***')
 
