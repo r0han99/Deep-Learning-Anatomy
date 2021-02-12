@@ -3,7 +3,8 @@
 A Comprehensive **Deep Learning** _Project Catalogue_ holding sophisticated details of a project implmented using both _Pytorch_
 and _Keras_ 
 
-<img width="1150" alt="banner-trans-l" src="https://user-images.githubusercontent.com/45916202/107805596-91448280-6d8b-11eb-9916-bb6967b6775e.png">
+![banner-white-l](https://user-images.githubusercontent.com/45916202/107805599-9275af80-6d8b-11eb-83ed-bbbebac9f4c9.jpg)
+
 
 
 
