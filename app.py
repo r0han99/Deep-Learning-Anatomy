@@ -26,22 +26,27 @@ def img_to_bytes(img_path):
 
 
 
-def model_predict(model_path,x,true,class_names):
+def model_predict(model_path,x,true,class_names,nn_type):
     
-    try:
-        model = load_model(model_path)
-    except:
-        st.error('Keras does not exist!')
-    else:
-        predict = model.predict_classes(x)
-        if class_names == None:
-            st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+    if not nn_type == 'Transfer Learning':
+    
+        try:
+            model = load_model(model_path)
+        except:
+            st.error('Keras does not exist!')
         else:
-            st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
-        if predict[0] == true.argmax():
-            st.success('___Which is True!___')
-        else:
-            st.error('___Which is False___')
+            predict = model.predict_classes(x)
+            if class_names == None:
+                st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+            else:
+                st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
+            if predict[0] == true.argmax():
+                st.success('___Which is True!___')
+            else:
+                st.error('___Which is False___')
+     else:
+        st.warning('___Saved Model states (.h5 file) for any transfer learning project is huge compared to the normal ones. Large files cannot be pushed on to GitHub repositories in a normal git-commit workflow. Working on Alternatives to make this section up and running.___')
+        
 
 
 
@@ -109,7 +114,7 @@ def model_eval(evaluate_path,project,nn_type):
                 # so user can pick one from here 
                 
                 
-                model_predict(model_path,x[rn_index],y[rn_index],class_names)
+                model_predict(model_path,x[rn_index],y[rn_index],class_names,nn_type)
                 
 
                 
