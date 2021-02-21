@@ -7,17 +7,17 @@ and _Keras_
 
 
 
-
 ***
 
 
 ## Project Abstract 
 
-_A progressive web application which holds all the Deep Learning Projects that I work on during the upcoming timeline. Post every project's completion all the meta-data unique to that deep learning model of a particular problem statement is dynamically collected, organised and byte-encoded into a file to establish the parameters of the project for future reference and a better comprehension of the project. This organised information from the file is then accessed and rendered on the web application deployed on the cloud for anyone to briefly absorb the concept behind the implementation. The application will also include a section, to allow  manual intervention of a user to try out the model in real-time with their input concerning the project. This entire application is a responsive catalog about all the project with dynamically changing information. The front-end aesthetics were facilitated by the Streamlit Library with absolute python codebase._
+_A progressive web application which holds all the Deep Learning Projects that I work on during the subsequent timeline. After every project's completion all the meta-data unique to that deep learning model of a particular problem statement is dynamically collected, organised and byte-encoded into a file to establish the parameters of the project for future reference and a better comprehension of the project. This organised information from the file is then accessed and rendered on the web application deployed on the cloud for anyone to briefly absorb the concept behind the implementation. The application will also include a section, to allow  manual intervention of a user to try out the model in real-time, with their input concerning the project. This entire application is a responsive catalog fairly can be even considered as an ensemled deployment of every project that I do. The front-end aesthetics were facilitated by the Streamlit Library with absolute python codebase._
 
 [Flowchart](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/Deep-Learning-Anatomy.png) elucidating the _Sequence of Actions and Comms_ between the scripts inorder to fill this catalog with proper details.
 
-## Project Catalogue 
+ 
+## Pipeline Script Testing Ideology
 
 ### _Pytorch & Keras_ 
 
@@ -30,13 +30,10 @@ _A progressive web application which holds all the Deep Learning Projects that I
 
   - ___Dogs-&-Cats___
   
-  
- 
-## Pipeline Script Testing Ideology
 
 - MNIST : Anchores the process of establishing the comprehensive report sheet which is to be rendered on the web-page.
 - CIFAR-10 : Facilitates the process of Constructing and Testing a robust pipeline script which dynamically creates report-sheets with minimal human intervention.
-- Cats-&-Dogs : Validates the report generation process and pipeline robustness post-deployment
+- Dogs-&-Cats : Validates the report generation process and pipeline robustness post-deployment
 
 Note, These 3 projects were the support structures to _test_ and _automate_ the process to fill the project catalogue dynamically.
 
