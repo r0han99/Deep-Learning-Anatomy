@@ -85,7 +85,7 @@ for x in vars0:
 
 # evaluate_dict 
 
-eval_dict = {'test_cases' : x_test[0:50], 'true': y_test[0:50], class_names: None ,'model':'/model.h5'}
+eval_dict = {'test_cases' : x_test[0:50], 'true': y_test[0:50], 'class_names': None ,'model':'/{model-name}.h5'}
 
 
 # dump 1 
@@ -150,7 +150,7 @@ def docs():
 Arguments - Description
 
     -np [path-to-project]: New project creation
-    -nptr [path-to-project]: tranfer learning projects
+    -nptr [path-to-project]: tranfer learning projects (./Project-name)
     -varl or --var-list [optional] : prints variable/artifact list or dictionary with datatypes 
         * [optional]
 

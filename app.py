@@ -13,6 +13,7 @@ import re
 import os 
 # model evaluation
 from tensorflow.keras.models import load_model
+from tensorflow.keras.utils import to_categorical
 
 
 
@@ -27,27 +28,28 @@ def img_to_bytes(img_path):
 
 def model_predict(model_path,x,true,class_names,nn_type):
     
-    if not nn_type == 'Transfer Learning':
-    
-        try:
-            model = load_model(model_path)
-        except:
+
+    try:
+        model = load_model(model_path)
+    except:
+        if not nn_type == 'Transfer Learning':
             st.error('Keras does not exist!')
         else:
-            predict = model.predict_classes(x)
-            if class_names == None:
-                st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
-            else:
-                st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
-            if predict[0] == true.argmax():
-                st.success('___Which is True!___')
-            else:
-                st.error('___Which is False___')
-    else:
-        
-        st.warning('___Saved Model states (.h5 file) for any transfer learning project is huge compared to the normal ones. Large files cannot be pushed on to GitHub repositories in a normal git-commit workflow. Working on Alternatives to make this section up and running.___')
-        
+            st.warning('___Saved Model states (.h5 file) for any transfer learning project is huge compared to the normal ones. Large files cannot be pushed on to GitHub repositories in a normal git-commit workflow. Working on Alternatives to make this section up and running.___')
 
+    else:
+        predict = model.predict_classes(x)
+        predict = predict.reshape(1)
+        
+        
+        if class_names == None:
+            st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+        else:
+            st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
+        if predict[0] == true.argmax():
+            st.success('___Which is True!___')
+        else:
+            st.error('___Which is False___')
 
 
 def model_eval(evaluate_path,project,nn_type):
@@ -82,7 +84,14 @@ def model_eval(evaluate_path,project,nn_type):
         else:
             model_path = './Projects/'+'Transfer-Learning/'+project+'/'+'samples'+model
 
-            
+        
+        try: 
+            shape = y.shape[1]
+        except:
+            shape = len(y.shape)
+            if shape ==1:
+                y = to_categorical(y)
+        
         
 
         try:
