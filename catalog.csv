@@ -5,3 +5,4 @@ date,project,framework,type,path
 11-Thursday (2021),CIFAR10,Keras/,CNN,./Projects/CIFAR10/Keras/artefacts.txt
 
 11-Thursday (2021),galaxy-classifier,Keras/,Transfer Learning,./Projects/Transfer-Learning/galaxy-classifier/artefacts.txt
+23-Tuesday (2021),Dogs-Cats,Keras/,Transfer Learning,./Projects/Transfer-Learning/Dogs-Cats/artefacts.txt
