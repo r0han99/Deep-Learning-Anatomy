@@ -37,6 +37,22 @@ _A progressive web application which holds all the Deep Learning Projects that I
 
 Note, These 3 projects were the support structures to _test_ and _automate_ the process to fill the project catalogue dynamically.
 
+***
+
+## List of Projects in the Catalogue (`Iteration-0`)
+
+**Convolutional Neural Networks**
+  
+   * MNIST
+   * CIFAR10
+
+**Transfer Learning** 
+
+   * Galaxy Classifier ( _InceptionV3_ )
+   * Dogs and Cats Classifier (_MobileNetV2_)
+
+***
+
 ## Deployment Log 
 
 - **[6th Feb, 2021]** _Deployed_
@@ -59,7 +75,7 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
   - added download-link to the source-code pdf
   - cs_plots() will render the plots related/included in a particular project
 
-[continuation...](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/changelog.md) ( _last-date in changelog - [11th Feb, 2021]_ )
+[continuation...](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/changelog.md) ( _last-date in changelog - [23th Feb, 2021]_ )
 
 
 ***
