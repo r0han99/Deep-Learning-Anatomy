@@ -145,9 +145,11 @@ def model_eval(evaluate_path,project,nn_type):
     
    
     
-def cs_body(report,project,framework):
+def cs_body(report,project,framework,nn_type):
 
-    pdf_url = 'https://github.com/r0han99/Deep-Learning-Anatomy/raw/main/Projects/' + project + '/' + framework + '/' + project+'-'+framework + '.pdf'
+
+    pdf_url = 'https://github.com/r0han99/Deep-Learning-Anatomy/raw/main/' + report['ipynb'][2:]
+
 
     cols = list(report.keys())[3:-3]
     # report.fillna('None',inplace=True)
@@ -325,7 +327,7 @@ def cs_main():
                     options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
 
                     if options == 'Project Artefacts':
-                        cs_body(report,project,framework)
+                        cs_body(report,project,framework,nn_type)
                     elif options == 'Plots':
                         cs_plots(report)
                     elif options == 'Data Overview':
@@ -401,7 +403,7 @@ def cs_main():
                 options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
 
                 if options == 'Project Artefacts':
-                    cs_body(report,project,framework)
+                    cs_body(report,project,framework,nn_type)
                 elif options == 'Plots':
                     cs_plots(report)
                 elif options == 'Data Overview':
