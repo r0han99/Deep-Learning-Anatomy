@@ -1,7 +1,7 @@
 # The Deep Learning Anatomy [<img src="./pngs/deep-learning.png" width="36" >](https://share.streamlit.io/r0han99/deep-learning-anatomy/main/app.py)
 
 A Comprehensive **Deep Learning** _Project Catalogue_ holding sophisticated details of a project implmented using both _Pytorch_
-and _Keras_ 
+and _TensorFlow2.0_ Frameworks.
 
 ![banner-white-l](https://user-images.githubusercontent.com/45916202/107805599-9275af80-6d8b-11eb-83ed-bbbebac9f4c9.jpg)
 
@@ -19,7 +19,6 @@ _A progressive web application which holds all the Deep Learning Projects that I
  
 ## Pipeline Script Testing Ideology
 
-### _Pytorch & Keras_ 
 
 ( Pre-Deployment ) 
 
@@ -39,15 +38,17 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
 
 ***
 
-## List of Projects in the Catalogue (`Iteration-0`)
+## List of Projects in the Catalogue
 
 **Convolutional Neural Networks**
-  
+
+  `Iteration-0`
    * MNIST
    * CIFAR10
 
 **Transfer Learning** 
 
+   `Iteration-0`
    * Galaxy Classifier ( _InceptionV3_ )
    * Dogs and Cats Classifier (_MobileNetV2_)
 
