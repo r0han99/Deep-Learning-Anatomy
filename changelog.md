@@ -5,7 +5,6 @@
   - Developed a pipeline script which is executed post project development, this gathers all the meta information from the project such as The Neural Network     Architecture ( _layers_, _Hidden Units_ ), Type of Prediction ( _Classification_, _Regression_), Type of Network ( _Convolutional_, _Recurrent_ ) etc. The meta info is organised and a report file is created, which is then processed by the application from the project _dir_ to be rendered on the Web Page.
   - Partially developed Application codebase. Front-End Project Artefacts are laid down 
   
-  
 - **[26th Jan, 2021]** _new patches_ 
   - created variable_dict and prompt_dict
   - Added commandline functionalities to the pipeline script to handle var-dicts and prompt-list
@@ -24,7 +23,7 @@
   - pipeline modified to the above criteria
   - added network 4 missed out network artifacts - Loss, batch_size, learning_rate, optimizer
   - changed logo to iteration3
-   
+  
 - **[1st Feb, 2021]** _data-overview, model-eval, patch-4_
 
   - Script Name changed to app.py following the streamlit convention
@@ -38,7 +37,7 @@
     - added iteration log in the application
     
 - **[6th Feb, 2021]** _CIFAR-10 Keras, Deployment Ready_
-    
+  
     - patches for pipeline script on --state
     - completed cifar-10 keras 
     - edited app.py to incorporate changes
@@ -50,8 +49,15 @@
 ## Post Deployment ChangeLog 
 
 - **[11 Feb, 2021]** _Transfer Learning Section + Galaxy-Classifier-InceptionV3_
-    
+  
     - patched pipeline to incorporate transfer learning project creations 
     - implemented galaxy classifier using transfer learning on pretrained network inceptionV3_ 
     - pdf url creation is now completely dynamic based on the artefacts dict
-   
+
+* **[23 Feb, 2021]** Iteration-0 Elapsed + Dogs and Cats - MobileNetV2
+
+    * Pipeline patch with Doc String updates, fixed --state typo
+    * Dogs & Cats Classifier with MobileNetv2 Under Transfer Learning Section 
+    * Application Updated to handle one-hot encoding of y vector and predict vector shapes 
+
+    
