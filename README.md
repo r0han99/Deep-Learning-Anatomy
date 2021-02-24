@@ -1,10 +1,11 @@
-# The Deep Learning Anatomy [<img src="./pngs/deep-learning.png" width="36" >](https://share.streamlit.io/r0han99/deep-learning-anatomy/main/app.py)
+# The Deep Learning Anatomy <img src="./pngs/deep-learning.png" width="36" > [<img src="./pngs/Streamlit.png" width="64">](https://share.streamlit.io/r0han99/deep-learning-anatomy/main/app.py)
+
+
 
 A Comprehensive **Deep Learning** _Project Catalogue_ holding sophisticated details of a project implmented using both _Pytorch_
 and _TensorFlow2.0_ Frameworks.
 
 ![banner-white-l](https://user-images.githubusercontent.com/45916202/107805599-9275af80-6d8b-11eb-83ed-bbbebac9f4c9.jpg)
-
 
 
 ***
