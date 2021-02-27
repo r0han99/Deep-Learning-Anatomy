@@ -60,4 +60,9 @@
     * Dogs & Cats Classifier with MobileNetv2 Under Transfer Learning Section 
     * Application Updated to handle one-hot encoding of y vector and predict vector shapes 
 
-    
+* **[28 Feb, 2021]** Active SMTP system, Join the Odyssey 
+    * SignUp Section to receive periodic emails of ChangeLog and Updated Project Information
+    * Pipeline patch to deploy emails and view status
+    * Added Banner Image
+    * Obfuscated & binary encoded user-db ( currently empty )
+

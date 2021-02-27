@@ -162,7 +162,7 @@ def model_eval(evaluate_path,project,nn_type,report):
                 
 
                 st.markdown('***')
-                st.write('___Model Classification___ - {}: `{}`'.format(report['metrics'],report['test_performance']))
+                st.write('___Model Classification___')
 
                 # in future the eval_dict will contain paths to both keras model and pytorch model 
                 # so user can pick one from here 
