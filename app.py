@@ -502,6 +502,9 @@ def page(expander):
         expander.error('Name or Email are in an unorthodox format, please re-enter.')
     
     
+
+    if expander.checkbox('why?', False):
+        expander.info('_Signing up here, will enable you to periodically get Automated-Emails about the ChangeLog and any new projects that are added into this ***Catalog***._')
     
 
 
@@ -540,7 +543,7 @@ if __name__ == '__main__':
     st.sidebar.markdown('***')
     st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b> [<img src='data:image/png;base64,{}' class='img-fluid' width=33 height=33>](https://github.com/r0han99/) '''.format(img_to_bytes("./pngs/GitHub.png"),img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     
-    # expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
+    st.sidebar.markdown('***')
     # st.sidebar.markdown('''''')
     
     
