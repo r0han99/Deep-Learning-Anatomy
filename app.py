@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 # os dependencies
 from pathlib import Path
+import datetime
 import base64
 import pickle
 import glob
@@ -16,6 +17,8 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import to_categorical
 
 
+ 
+
 
 
 # image encoding 
@@ -25,8 +28,46 @@ def img_to_bytes(img_path):
     return encoded
 
 
+def validate(details):
 
-def model_predict(model_path,x,true,class_names,nn_type):
+    # load db
+    with open('./db.txt', 'rb') as f:
+        data = f.read() 
+    db = pickle.loads(data)
+    npeeps = db.shape[0]
+    #unpack details 
+    name, email = details
+
+    names = list(db['Names'])
+    emails = list(db['Emails'])
+
+    # name can be same but not email
+    status = (name in names and email in emails)
+
+    return status,npeeps
+
+
+def userdb(details):
+
+    # access db
+    with open('./db.txt', 'rb') as f:
+        data = f.read() 
+    db = pickle.loads(data)
+    
+    # add row 
+    db.loc[len(db.index)] = details
+    
+    # write changes
+    with open('./db.txt','wb') as f:
+        pickle.dump(db,f)
+        
+
+    
+
+
+
+
+def model_predict(model_path,x,true,class_names,nn_type,report):
     
 
     try:
@@ -41,6 +82,7 @@ def model_predict(model_path,x,true,class_names,nn_type):
         predict = model.predict_classes(x)
         predict = predict.reshape(1)
         
+    
         
         if class_names == None:
             st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
@@ -52,7 +94,8 @@ def model_predict(model_path,x,true,class_names,nn_type):
             st.error('___Which is False___')
 
 
-def model_eval(evaluate_path,project,nn_type):
+def model_eval(evaluate_path,project,nn_type,report):
+
 
     
     st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Real-Time Model Evaluation</h3>",unsafe_allow_html=True)
@@ -99,11 +142,12 @@ def model_eval(evaluate_path,project,nn_type):
         except:
             class_names = None
 
-        expander = st.beta_expander('Evaluation type')
-        control = expander.radio('choose',('Random Test-Case', 'Upload Test-Case'))
-        st.markdown('***')
+        # expander = st.beta_expander('Evaluation type')
+
+        control = st.selectbox('Test Case type',('Random Test-Set Sample', 'Upload Test-Case'),key='eval-type')
         
-        if control == 'Random Test-Case':
+        if control == 'Random Test-Set Sample':
+            st.markdown('***')
             header, generator = st.beta_columns(2)
             header.markdown(f'___{control}___')
             if generator.button('Generate random sample'):
@@ -116,21 +160,18 @@ def model_eval(evaluate_path,project,nn_type):
                 else:
                     ans = prompt_col.markdown(f'True Target Class = `{y[rn_index].argmax()}`, a `{class_names[y[rn_index].argmax()]}`')
                 
+
                 st.markdown('***')
-                st.write('___Model Classification___')
+                st.write('___Model Classification___ - {}: `{}`'.format(report['metrics'],report['test_performance']))
 
                 # in future the eval_dict will contain paths to both keras model and pytorch model 
                 # so user can pick one from here 
                 
                 
-                model_predict(model_path,x[rn_index],y[rn_index],class_names,nn_type)
-                
+                model_predict(model_path,x[rn_index],y[rn_index],class_names,nn_type,report)
+                  
 
-                
-
-            
-
-        else:
+        elif control == 'Upload Test-Case':
             st.warning('_Currently under development!_')
             image_file = st.file_uploader("Upload Image",type=['jpg', 'png', 'jpeg'])
             
@@ -259,8 +300,9 @@ def cs_main():
     
     st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./pngs/brain.png",layout="centered",initial_sidebar_state="auto",)
    
-    tagline = 'A pragmatic approach to attain the Deep Learning Knowledge'
+    tagline = 'My odyssey of attaining Deep Learning knowledge'
     st.markdown('''<h1 style='text-align:center; font-weight:bold; color:black;'>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("./pngs/deep-learning.png"),tagline),unsafe_allow_html=True)
+    # st.image('./banner.png',width=700)
     st.markdown('<hr style="height:2px;border-width:0;color:gray;background-color:gray">',unsafe_allow_html=True)
     st.sidebar.markdown("<h2 style='font-family:BioRhyme; '>Project Catalog 📓</h2>",unsafe_allow_html=True)
     st.sidebar.markdown('***')
@@ -271,13 +313,16 @@ def cs_main():
         
         catalog = pd.read_csv(catalog_path)
         types = list(catalog['type'].unique())
-        
-        nn_type = st.sidebar.selectbox('Approach',types,key='nn-type')
+        all_list = list(catalog['project'].unique())
+        date = list(catalog['date'])[-1:]
+        nn_type = st.sidebar.selectbox('Category',types,key='nn-type')
         catalog = catalog[catalog['type'] == nn_type]
         paths = list(catalog['path'])
         projects = list(catalog['project'].unique())
         # catalog, paths, projects, types = read_catalog(catalog_path,nn_type) # read paths 
         
+    
+
         
         
 
@@ -287,6 +332,9 @@ def cs_main():
             project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
             framework  = st.sidebar.radio("Framework", ("Keras", "Pytorch"), key='Deep-Learning-frameworks')
 
+            
+
+           
             # for data-overview and eval
             overview = os.path.join('./Projects', project, 'samples','overview.txt')
             evaluate = os.path.join('./Projects', project, 'samples','evaluate.txt')
@@ -334,7 +382,7 @@ def cs_main():
                         cs_data(overview)
                     elif options == 'Model Evaluation':
                         
-                        model_eval(evaluate,project,nn_type)
+                        model_eval(evaluate,project,nn_type,report)
                 
                 else:
                     st.error(f"{framework}'s Version of {project} doesn't exist in the catalog.")
@@ -361,6 +409,9 @@ def cs_main():
             project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
             framework = catalog['framework'].values[0][:-1]
             
+            
+
+
             # for data-overview and eval
             overview = os.path.join('./Projects','Transfer-Learning' ,project, 'samples','overview.txt')
             evaluate = os.path.join('./Projects','Transfer-Learning' ,project, 'samples','evaluate.txt')
@@ -395,10 +446,12 @@ def cs_main():
 
                 # st.write(report)
 
+                
 
                 radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
 
                 st.sidebar.markdown('***') # sidebar section break
+                
 
                 options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
 
@@ -410,10 +463,15 @@ def cs_main():
                     cs_data(overview)
                 elif options == 'Model Evaluation':
                     
-                    model_eval(evaluate,project,nn_type)
+                    model_eval(evaluate,project,nn_type,report)
             
-            
-            
+
+        st.sidebar.markdown('***')
+        all_proj = st.sidebar.beta_expander('All projects')
+        all_proj.code('** Current List **')
+        all_proj.write(all_list)
+        
+        
 
 
     # if catalog.csv doesn't exist
@@ -422,11 +480,29 @@ def cs_main():
     
     
     
-        
+def page(expander):
     
     
-        
+    # st.sidebar.beta_expandertitle('Explore ✨')
 
+    r_name = r"^\w+$"
+    r_email = r"^[a-z0-9\._]+@[a-z]+\.[a-z]{1,3}"
+
+
+    name = expander.text_input('Enter your Name:')
+    status = True if re.fullmatch(r_name,name) else False
+    email = expander.text_input('Enter your Email ID:')
+    status_e = True if re.fullmatch(r_email,email) else False
+
+    if (status and status_e):
+        expander.success("___Thank you!, I'll keep you posted___")
+        return 'Done', (name,email)
+
+    elif not name == '' and not email == '':
+        expander.error('Name or Email are in an unorthodox format, please re-enter.')
+    
+    
+    
 
 
 
@@ -434,16 +510,37 @@ if __name__ == '__main__':
     
 
     cs_main()
-    st.sidebar.markdown('***')
     
-    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b>'''.format(img_to_bytes("./pngs/GitHub.png")), unsafe_allow_html=True)
+
+    expander = st.sidebar.beta_expander('Sign-Up?')
+    expander.markdown('''<p style='font-size:14.5px; color:#E74A2B; font-family:poppins; font-weight:bold; text-align:center; padding-right:42px;'>Join my odyssey ✨</p>''',unsafe_allow_html=True)
+    expander.image('./banner.png',width=300)
+    try:
+        status,(name,email) = page(expander)
+        if status == 'Done':
+            # expander.code(f"{name}, {email}")
+            details = list([name,email])
+            # another function to validate if the user already exists in the db
+            status,npeeps = validate(details)
+
+            if status == False:
+                userdb(details)
+            else:
+                expander.markdown('''<p style='font-size:14.5px; color:green; font-family:poppins; font-weight:bold; text-align:center; padding-right:42px;'>Already Registered for the Odyssey</p>''',unsafe_allow_html=True)
+                # expander.code('People joined {:,}'.format(npeeps)) Number of People Joined
+
+            
+    except:
+        pass
+
+   
+
+    # expander.markdown('***')
 
     st.sidebar.markdown('***')
-    expander = st.sidebar.beta_expander('Iteration?')
-    expander.markdown(' * ___Iteration-0 | `6th Feb, 2021`;___')
-    expander.markdown('***')
+    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b> [<img src='data:image/png;base64,{}' class='img-fluid' width=33 height=33>](https://github.com/r0han99/) '''.format(img_to_bytes("./pngs/GitHub.png"),img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     
-    expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
+    # expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     # st.sidebar.markdown('''''')
     
     
