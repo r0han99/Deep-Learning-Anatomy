@@ -171,6 +171,12 @@ Arguments - Description
             1. -d : (default) displays artefact based on input
             2. --update : updates an existing artefact with the novel info' provided
 
+    -db [optional] : deploys emails to the people who joined the odyssey 
+        * [optional]
+
+            1. --status : prints the db of users 
+            2. --deploy : deployes preset email and writes a log 
+
     '''
 
     print(help)
@@ -514,10 +520,31 @@ def main():
                 print('Invalid arg, try --help')
         else:
             artefact_edit()    
-    
-    
-    
 
+    elif sys.argv[1] == '-db':
+
+        if len(sys.argv) == 3:
+            if sys.argv[2] == '--status':
+                db = pickle_handle('../db.txt','load')
+                print(db)
+                print()
+                print('Number of users who joined odyssey : {}'.format(db.shape[0]))
+            
+    
+            elif sys.argv[2] == '--deploy':
+
+                '''
+                1. Reads an already writen file potentially MD, and edits positions with names
+                2. Sends the mails iteratively to every user who enrolled
+                3. writes a log --> fmt [date][users][summary]
+                
+                '''
+                pass
+        else:
+            db = pickle_handle('../db.txt','load')
+            print(db)
+            print()
+            print('Number of users who joined odyssey : {}'.format(db.shape[0]))
 
 
 
