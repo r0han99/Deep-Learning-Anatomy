@@ -162,7 +162,7 @@ def model_eval(evaluate_path,project,nn_type,report):
                 
 
                 st.markdown('***')
-                st.write('___Model Classification___')
+                st.write('___Model Classification___ - {}: `{}`'.format(report['metrics'],report['test_performance']))
 
                 # in future the eval_dict will contain paths to both keras model and pytorch model 
                 # so user can pick one from here 
@@ -313,9 +313,11 @@ def cs_main():
         
         catalog = pd.read_csv(catalog_path)
         types = list(catalog['type'].unique())
+        types_a = ('Convolutional Neural Networks', 'Transfer Learning')
         all_list = list(catalog['project'].unique())
         date = list(catalog['date'])[-1:]
-        nn_type = st.sidebar.selectbox('Category',types,key='nn-type')
+        nn_type = st.sidebar.radio('Category',types_a,key='nn-type')
+        nn_type = 'CNN' if nn_type == 'Convolutional Neural Networks' else nn_type
         catalog = catalog[catalog['type'] == nn_type]
         paths = list(catalog['path'])
         projects = list(catalog['project'].unique())
@@ -502,9 +504,6 @@ def page(expander):
         expander.error('Name or Email are in an unorthodox format, please re-enter.')
     
     
-
-    if expander.checkbox('why?', False):
-        expander.info('_Signing up here, will enable you to periodically get Automated-Emails about the ChangeLog and any new projects that are added into this ***Catalog***._')
     
 
 
@@ -543,7 +542,7 @@ if __name__ == '__main__':
     st.sidebar.markdown('***')
     st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b> [<img src='data:image/png;base64,{}' class='img-fluid' width=33 height=33>](https://github.com/r0han99/) '''.format(img_to_bytes("./pngs/GitHub.png"),img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     
-    st.sidebar.markdown('***')
+    # expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     # st.sidebar.markdown('''''')
     
     
