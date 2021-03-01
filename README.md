@@ -1,4 +1,5 @@
-![banner-white-l](https://user-images.githubusercontent.com/45916202/107805599-9275af80-6d8b-11eb-83ed-bbbebac9f4c9.jpg)
+<img width="1150" alt="banner-trans-l" src="https://user-images.githubusercontent.com/45916202/109449517-ac431200-7a6e-11eb-8e7d-d59c26d475b9.png">
+
 
 [<img src="./pngs/Streamlit.png" width="64" style="float:right border:5px solid black">](https://share.streamlit.io/r0han99/deep-learning-anatomy/main/app.py)
 
