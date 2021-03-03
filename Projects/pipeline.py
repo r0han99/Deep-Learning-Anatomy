@@ -176,6 +176,9 @@ Arguments - Description
 
             1. --status : prints the db of users 
             2. --deploy : deployes preset email and writes a log 
+            3. --del : Truncates the Existing db while also backingup the records under assets/bckup 
+            and writes a logfile.
+            4. --backup : simple backup of the database.
 
     '''
 
@@ -522,10 +525,22 @@ def main():
             artefact_edit()    
 
     elif sys.argv[1] == '-db':
-
+        db_path = '../assets/db.txt'
         if len(sys.argv) == 3:
             if sys.argv[2] == '--status':
-                db = pickle_handle('../db.txt','load')
+                while True:
+                    db_type = input('--status of 1. db, 2. bckup_db  >> Enter : ')
+                    if db_type == '1':
+                        break
+                    elif db_type == '2':
+                        break
+                    else:
+                        print('Invalid re-enter')
+                        continue
+
+                status_path = db_path if db_type == '1' else '../assets/bckup/bckup.txt'
+                print(status_path)              
+                db = pickle_handle(status_path,'load')
                 print(db)
                 print()
                 print('Number of users who joined odyssey : {}'.format(db.shape[0]))
@@ -534,17 +549,75 @@ def main():
             elif sys.argv[2] == '--deploy':
 
                 '''
-                1. Reads an already writen file potentially MD, and edits positions with names
-                2. Sends the mails iteratively to every user who enrolled
-                3. writes a log --> fmt [date][users][summary]
+                1. checks the env, if its /dev goes to path git and runs a subprocess git pull and copies the content of db.txt to this db.txt 
+                2. Reads an already writen file potentially MD, and edits positions with names
+                3. Sends the mails iteratively to every user who enrolled
+                4. writes a log --> fmt [date][users][summary]
                 
                 '''
-                pass
+                print('DEPLOYMENT')
+            
+            elif sys.argv[2] == '--del':
+                
+                print()
+                initial_state = pickle_handle(db_path, 'load')
+                if not initial_state.empty:
+                    
+                    if not os.path.exists(os.path.join('../assets','bckup/')):
+                        os.mkdir(os.path.join('../assets','bckup/'))
+                    else:
+                        print('Backing Up db...')
+                        bckup_path = os.path.join('../assets','bckup/')
+                        bckup_file = os.path.join('../assets/','bckup/','bckup.txt')
+                        log_file = os.path.join('../assets/','bckup/','backup.log')
+                        db_state = pickle_handle(db_path, 'load')
+                        # writing bckup
+                        pickle_handle('../assets/bckup/bckup.txt', 'dump',d=db_state)
+                        print('Number of Records backed-up {}'.format(db_state.shape[0]))
+                        
+                        print('Writing Log ..')
+                        with open(log_file,'a') as log:
+                            log.write(f'[{datetime.datetime.now()} records backed-up : {db_state.shape[0]}]')
+                            log.write('\n')
+
+                        print('Truncating db ...')
+                        user_db = pd.DataFrame({"Names":[], "Emails":[]})
+                        with open(db_path,'wb') as f:
+                            pickle.dump(user_db,f)  
+                        print('Done!')
+
+                else:
+                    print('Database is already Empty!')
+
+            elif sys.argv[2] == '--backup':
+                
+                print('Backing Up db...')
+                bckup_path = os.path.join('../assets','bckup/')
+                bckup_file = os.path.join('../assets/','bckup/','bckup.txt')
+                log_file = os.path.join('../assets/','bckup/','backup.log')
+                db_state = pickle_handle(db_path, 'load')
+                # writing bckup
+                pickle_handle('../assets/bckup/bckup.txt', 'dump',d=db_state)
+                print('Number of Records backed-up {}'.format(db_state.shape[0]))
+                
+                print('Writing Log ..')
+                with open(log_file,'a') as log:
+                    log.write(f'[{datetime.datetime.now()} records backed-up : {db_state.shape[0]}]')
+                    log.write('\n')
+                print('Done!')
+
+
+
+                
+
+                                 
+                
+                    
         else:
-            db = pickle_handle('../db.txt','load')
+            db = pickle_handle('../assets/db.txt','load')
             print(db)
             print()
-            print('Number of users who joined odyssey : {}'.format(db.shape[0]))
+            print('Number of users who joined the odyssey : {}'.format(db.shape[0]))
 
 
 
