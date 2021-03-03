@@ -511,7 +511,12 @@ if __name__ == '__main__':
     
 
     cs_main()
-    
+    text = st.text_input('Testing')
+
+    with open('input_test.txt', 'a') as f:
+        f.write(text+'\n')
+
+
 
     expander = st.sidebar.beta_expander('Sign-Up?')
     expander.markdown('''<p style='font-size:14.5px; color:#E74A2B; font-family:poppins; font-weight:bold; text-align:center; padding-right:42px;'>Join my odyssey ✨</p>''',unsafe_allow_html=True)
