@@ -66,3 +66,11 @@
     * Added Banner Image
     * Obfuscated & binary encoded user-db ( currently empty )
 
+
+* **[3 Mar, 2021]** db Management
+
+    * pipeline can now truncate and make backups of userdb 
+    * application now has a register button for the signup page
+    * pipeline doc updated 
+
+
