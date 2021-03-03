@@ -31,7 +31,7 @@ def img_to_bytes(img_path):
 def validate(details):
 
     # load db
-    with open('./db.txt', 'rb') as f:
+    with open('./assets/db.txt', 'rb') as f:
         data = f.read() 
     db = pickle.loads(data)
     npeeps = db.shape[0]
@@ -50,7 +50,7 @@ def validate(details):
 def userdb(details):
 
     # access db
-    with open('./db.txt', 'rb') as f:
+    with open('./assets/db.txt', 'rb') as f:
         data = f.read() 
     db = pickle.loads(data)
     
@@ -58,7 +58,7 @@ def userdb(details):
     db.loc[len(db.index)] = details
     
     # write changes
-    with open('./db.txt','wb') as f:
+    with open('./assets/db.txt','wb') as f:
         pickle.dump(db,f)
         
 
@@ -496,16 +496,15 @@ def page(expander):
     email = expander.text_input('Enter your Email ID:')
     status_e = True if re.fullmatch(r_email,email) else False
 
-    if (status and status_e):
-        expander.success("___Thank you!, I'll keep you posted___")
-        return 'Done', (name,email)
+    if expander.button('Register'):
+        if (status and status_e):
+            expander.success("Thank you :) I'll keep you posted")
+            return 'Done', (name,email)
 
-    elif not name == '' and not email == '':
-        expander.error('Name or Email are in an unorthodox format, please re-enter.')
+        elif not name == '' and not email == '':
+            expander.error('Name or Email are in an unorthodox format, please re-enter.')
     
     
-    
-
 
 
 if __name__ == '__main__':
@@ -524,6 +523,8 @@ if __name__ == '__main__':
             details = list([name,email])
             # another function to validate if the user already exists in the db
             status,npeeps = validate(details)
+
+            
 
             if status == False:
                 userdb(details)
