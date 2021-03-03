@@ -513,7 +513,7 @@ if __name__ == '__main__':
     cs_main()
     text = st.text_input('Testing')
 
-    with open('input_test.txt', 'a') as f:
+    with open('./input_test.txt', 'a') as f:
         f.write(text+'\n')
 
 
