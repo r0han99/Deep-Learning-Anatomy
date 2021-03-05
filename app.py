@@ -28,38 +28,38 @@ def img_to_bytes(img_path):
     return encoded
 
 
-def validate(details):
+# def validate(details):
 
-    # load db
-    with open('./assets/db.txt', 'rb') as f:
-        data = f.read() 
-    db = pickle.loads(data)
-    npeeps = db.shape[0]
-    #unpack details 
-    name, email = details
+#     # load db
+#     with open('./assets/db.txt', 'rb') as f:
+#         data = f.read() 
+#     db = pickle.loads(data)
+#     npeeps = db.shape[0]
+#     #unpack details 
+#     name, email = details
 
-    names = list(db['Names'])
-    emails = list(db['Emails'])
+#     names = list(db['Names'])
+#     emails = list(db['Emails'])
 
-    # name can be same but not email
-    status = (name in names and email in emails)
+#     # name can be same but not email
+#     status = (name in names and email in emails)
 
-    return status,npeeps
+#     return status,npeeps
 
 
-def userdb(details):
+# def userdb(details):
 
-    # access db
-    with open('./assets/db.txt', 'rb') as f:
-        data = f.read() 
-    db = pickle.loads(data)
+#     # access db
+#     with open('./assets/db.txt', 'rb') as f:
+#         data = f.read() 
+#     db = pickle.loads(data)
     
-    # add row 
-    db.loc[len(db.index)] = details
+#     # add row 
+#     db.loc[len(db.index)] = details
     
-    # write changes
-    with open('./assets/db.txt','wb') as f:
-        pickle.dump(db,f)
+#     # write changes
+#     with open('./assets/db.txt','wb') as f:
+#         pickle.dump(db,f)
         
 
     
@@ -197,7 +197,7 @@ def cs_body(report,project,framework,nn_type):
     st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Project Artefacts</h3>",unsafe_allow_html=True)
     st.markdown('***')
 
-    with open('./prompt-list.txt', 'rb') as f:
+    with open('./assets/prompt-list.txt', 'rb') as f:
         data = f.read() 
     d = pickle.loads(data)
     
@@ -308,7 +308,7 @@ def cs_main():
     st.sidebar.markdown('***')
     
 
-    catalog_path = './catalog.csv'
+    catalog_path = './assets/catalog.csv'
     if os.path.exists(catalog_path):
         
         catalog = pd.read_csv(catalog_path)
@@ -515,28 +515,28 @@ if __name__ == '__main__':
 
 
 
-    expander = st.sidebar.beta_expander('Sign-Up?')
-    expander.markdown('''<p style='font-size:14.5px; color:#E74A2B; font-family:poppins; font-weight:bold; text-align:center; padding-right:42px;'>Join my odyssey ✨</p>''',unsafe_allow_html=True)
-    expander.image('./banner.png',width=300)
-    try:
-        status,(name,email) = page(expander)
-        if status == 'Done':
-            # expander.code(f"{name}, {email}")
-            details = list([name,email])
-            # another function to validate if the user already exists in the db
-            status,npeeps = validate(details)
+    # expander = st.sidebar.beta_expander('Sign-Up?')
+    # expander.markdown('''<p style='font-size:14.5px; color:#E74A2B; font-family:poppins; font-weight:bold; text-align:center; padding-right:42px;'>Join my odyssey ✨</p>''',unsafe_allow_html=True)
+    # expander.image('./banner.png',width=300)
+    # try:
+    #     status,(name,email) = page(expander)
+    #     if status == 'Done':
+    #         # expander.code(f"{name}, {email}")
+    #         details = list([name,email])
+    #         # another function to validate if the user already exists in the db
+    #         status,npeeps = validate(details)
 
             
 
-            if status == False:
-                userdb(details)
-            else:
-                expander.markdown('''<p style='font-size:14.5px; color:green; font-family:poppins; font-weight:bold; text-align:center; padding-right:42px;'>Already Registered for the Odyssey</p>''',unsafe_allow_html=True)
-                # expander.code('People joined {:,}'.format(npeeps)) Number of People Joined
+    #         if status == False:
+    #             userdb(details)
+    #         else:
+    #             expander.markdown('''<p style='font-size:14.5px; color:green; font-family:poppins; font-weight:bold; text-align:center; padding-right:42px;'>Already Registered for the Odyssey</p>''',unsafe_allow_html=True)
+    #             # expander.code('People joined {:,}'.format(npeeps)) Number of People Joined
 
             
-    except:
-        pass
+    # except:
+    #     pass
 
    
 
