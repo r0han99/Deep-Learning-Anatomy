@@ -54,23 +54,29 @@
     - implemented galaxy classifier using transfer learning on pretrained network inceptionV3_ 
     - pdf url creation is now completely dynamic based on the artefacts dict
 
-* **[23 Feb, 2021]** Iteration-0 Elapsed + Dogs and Cats - MobileNetV2
+* **[23 Feb, 2021]** _Iteration-0 Elapsed + Dogs and Cats - MobileNetV2_
 
     * Pipeline patch with Doc String updates, fixed --state typo
     * Dogs & Cats Classifier with MobileNetv2 Under Transfer Learning Section 
     * Application Updated to handle one-hot encoding of y vector and predict vector shapes 
 
-* **[28 Feb, 2021]** Active SMTP system, Join the Odyssey 
+* **[28 Feb, 2021]** _Active SMTP system, Join the Odyssey_
     * SignUp Section to receive periodic emails of ChangeLog and Updated Project Information
     * Pipeline patch to deploy emails and view status
     * Added Banner Image
     * Obfuscated & binary encoded user-db ( currently empty )
 
 
-* **[3 Mar, 2021]** db Management
+* **[3 Mar, 2021]** _db Management_
 
     * pipeline can now truncate and make backups of userdb 
     * application now has a register button for the signup page
     * pipeline doc updated 
+
+* **[6 Mar, 2021]** _abandoned the idea of db and signup_
+
+    * rolled back to the older version without signup and db integration 
+    * cleaned up the repository, moved prompt_list and catalog to /assets 
+    * made necessary changes to paths in the application to anticipate changes in the repository 
 
 
