@@ -79,4 +79,11 @@
     * cleaned up the repository, moved prompt_list and catalog to /assets 
     * made necessary changes to paths in the application to anticipate changes in the repository 
 
+* **[8 Mar, 2021]** _pipeline patch_
+    
+    * pipeline now can --update artefacts like summary and desc by taking formatted information from files
+    * updated doc-string
+    * fixed formatting for Dogs-Cats Summary
+  
+
 
