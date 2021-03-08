@@ -169,7 +169,9 @@ Arguments - Description
         * [optional]
             
             1. -d : (default) displays artefact based on input
-            2. --update : updates an existing artefact with the novel info' provided
+            2. --update [optional]: updates an existing artefact with the novel info' provided
+                * [optional]
+                    1. -f | -file : for atributes like summary and descriptions input is taken from a file.
 
     -db [optional] : deploys emails to the people who joined the odyssey 
         * [optional]
@@ -207,7 +209,7 @@ def meta_collect(project_path,project_name,fw,nntype):
         # report = pd.DataFrame(pd.Series(d)).T
 
         # dev = '../catalog1.csv'
-        main= '../catalog.csv'
+        main= '../assets/catalog.csv'
 
         print('Updating Catalog .. ')
         if not os.path.exists(main):
@@ -289,7 +291,7 @@ def artefact_edit(flag='-d'):
     catalog read and select path pivoting on framwework and project name 
 
     '''
-    catalog_path = '../catalog.csv'
+    catalog_path = '../assets/catalog.csv'
     catalog = pd.read_csv(catalog_path)
     
     while True:
@@ -321,7 +323,7 @@ def artefact_edit(flag='-d'):
     path = os.path.join('./',*path)
 
 
-    print(f'Accessing Artefact archive of {fw}-{prj}')
+    print(f'\nAccessing Artefact archive of {fw}-{prj}')
 
     artefact = pickle_handle(path,'load')
     
@@ -338,7 +340,8 @@ def artefact_edit(flag='-d'):
                 print(f'Artefact - {art_name} is non-existent!')
                 continue
 
-    elif flag == '--update':
+    elif flag[2] == '--update':
+        
         print(list(artefact.keys()))
         while True:
             art_name = input('Enter Artifact to retreive info : ')
@@ -352,16 +355,47 @@ def artefact_edit(flag='-d'):
                 continue
             
         print(f'Updating Artefact Info for >> {art_name}')
-        info = input('New info : ')
-        artefact[art_name] = info
-        print('Variable Added to the Dictionary! -- saving state .. ')
-        pickle_handle(file_path=path,method='dump',d=artefact)
 
-        print('ARTEFACT - INFO ( Updated ) ')
-        print(f"{art_name} >> ",artefact[art_name])
+        if flag[3] == '-f' or flag[3] == '-file':
+
+            print()
+            print('File Input')
+            print()
+            while True:
+                filename = input('Enter FILE Relative-PATH : ')
+                if os.path.exists(filename):
+                    break
+                else:
+                    print('invalid filepath!')
+                    continue
+            
+            with open(filename,'r') as f:
+                content = f.readlines()
+
+            text = ''
+            for line in content:
+                text += line
+            
+            print('PREVIEW\n')
+            print(text)
+
+            print('\nVariable Added to the Dictionary! -- saving state .. ')
+            artefact[art_name] = text
+            pickle_handle(file_path=path,method='dump',d=artefact)
+            
+            print('ARTEFACT - INFO ( Updated ) ')
+            print(f"{art_name} >> ",artefact[art_name])
+            
+        
+        else:
+            info = input('New info : ')
+            artefact[art_name] = info
+            print('Variable Added to the Dictionary! -- saving state .. ')
+            pickle_handle(file_path=path,method='dump',d=artefact)
+
+            print('ARTEFACT - INFO ( Updated ) ')
+            print(f"{art_name} >> ",artefact[art_name])
  
-
-
 
 def main():
 
@@ -472,7 +506,7 @@ def main():
 
     elif sys.argv[1] == '--status':
         
-        catalog = pd.read_csv('../catalog.csv')
+        catalog = pd.read_csv('../assets/catalog.csv')
         keras = catalog[catalog['framework'] == 'Keras/']
         pytorch = catalog[catalog['framework'] == 'Pytorch/']
 
@@ -514,11 +548,11 @@ def main():
     
     elif sys.argv[1] == '-ar':
         
-        if len(sys.argv) == 3:
+        if len(sys.argv) >= 3:
             if sys.argv[2] == '-d':
                 artefact_edit()
             elif sys.argv[2] == '--update':
-                artefact_edit(flag=sys.argv[2])
+                artefact_edit(flag=sys.argv)
             else:
                 print('Invalid arg, try --help')
         else:
@@ -629,7 +663,8 @@ if __name__ == '__main__':
     
 
     if len(sys.argv) == 1:
-        print('This Script Takes in Command-Line Arguments to trigger the functionalitied required, try --help for assistance')
+        print('This Script Takes in Command-Line Arguments to trigger the functionalitied required,\nfetching ```doc-string```')
+        docs()
         exit(1)
     else:
         main()    
