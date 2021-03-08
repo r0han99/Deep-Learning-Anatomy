@@ -72,7 +72,7 @@ Note, These 3 projects were the support structures to _test_ and _automate_ the 
   - added download-link to the source-code pdf
   - cs_plots() will render the plots related/included in a particular project
 
-[continuation...](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/changelog.md) ( _last-date in changelog - [6th March, 2021]_ )
+[continuation...](https://github.com/r0han99/Deep-Learning-Anatomy/blob/main/changelog.md) ( _last-date in changelog - [8th March, 2021]_ )
 
 
 ***
