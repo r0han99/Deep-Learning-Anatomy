@@ -1,6 +1,8 @@
 # Libraries 
 
 import streamlit as st 
+import src.ann as ann
+import src.simulation as sim
 # dataset dependencies 
 import numpy as np
 import pandas as pd
@@ -15,11 +17,14 @@ import os
 # model evaluation
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import to_categorical
+# computer vision
+import cv2
+from PIL import Image
+
+
 
 
  
-
-
 
 # image encoding 
 def img_to_bytes(img_path):
@@ -67,7 +72,7 @@ def img_to_bytes(img_path):
 
 
 
-def model_predict(model_path,x,true,class_names,nn_type,report):
+def model_predict(model_path,x,true,class_names,nn_type,report,image=None):
     
 
     try:
@@ -79,22 +84,46 @@ def model_predict(model_path,x,true,class_names,nn_type,report):
             st.warning('___Saved Model states (.h5 file) for any transfer learning project is huge compared to the normal ones. Large files cannot be pushed on to GitHub repositories in a normal git-commit workflow. Working on Alternatives to make this section up and running.___')
 
     else:
-        predict = model.predict_classes(x)
-        predict = predict.reshape(1)
-        
-    
-        
-        if class_names == None:
-            st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+
+        if image is None:
+            predict = model.predict_classes(x)
+            predict = predict.reshape(1)
+            
+            
+            if class_names == None:
+                st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+            else:
+                st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
+            
+            if predict[0] == true.argmax():
+                st.success('___Which is True!___')
+            else:
+                st.error('___Which is False___')
         else:
-            st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
-        if predict[0] == true.argmax():
-            st.success('___Which is True!___')
-        else:
-            st.error('___Which is False___')
+            predict = model.predict_classes(image)
+            predict = predict.reshape(1)
+            
+            if class_names == None:
+                st.markdown('Model Classifies this to be - `{}`'.format(predict[0]))
+               
+                if str(predict[0]) == true:
+                    st.success('___Which is True!___')
+                else:
+                    st.error('___Which is False___')
 
 
-def model_eval(evaluate_path,project,nn_type,report):
+            else:
+                st.markdown('Model Classifies this to be - `{}`, class - `{}`'.format(predict[0],class_names[predict[0]]))
+
+                if class_names[predict[0]].lower() == true:
+                    st.success('___Which is True!___')
+                else:
+                    st.error('___Which is False___')
+
+            
+            
+
+def model_eval(evaluate_path,overview_path,project,nn_type,report):
 
 
     
@@ -102,10 +131,19 @@ def model_eval(evaluate_path,project,nn_type,report):
 
     st.markdown('***')
     try:
+        # Model-Fetch Ops
         path = evaluate_path
         with open(path,'rb') as f:
             temp = f.read()
         test_data = pickle.loads(temp)
+
+        # Uploaded test-case requirements blueprint
+        path = overview_path
+        with open(path,'rb') as f:
+            temp = f.read()
+        dims = pickle.loads(temp)
+        dims = dims['dimensions']
+
 
 
     except:
@@ -149,9 +187,10 @@ def model_eval(evaluate_path,project,nn_type,report):
         if control == 'Random Test-Set Sample':
             st.markdown('***')
             header, generator = st.beta_columns(2)
-            header.markdown(f'___{control}___')
+            # st.markdown('''<p style='color=red; font-weight:bold; font-style:italic; text-align:center;'>Upload a Test-Case -- <small style='color:#EB8E26;'>{}</small></p>''',unsafe_allow_html=True)
+            header.markdown('''<p style='color=red; font-weight:bold; font-style:italic; text-align:center;'>Random Test-Set Sample <br> <small style='color:#EE4C2C;'>{}</small></p>'''.format(project),unsafe_allow_html=True)
             if generator.button('Generate random sample'):
-            
+                st.markdown('***')
                 image_col, prompt_col = st.beta_columns(2)
                 rn_index = np.random.randint(0,50,1)
                 image_col.image(x[rn_index],caption='random sample', width=220)
@@ -162,30 +201,68 @@ def model_eval(evaluate_path,project,nn_type,report):
                 
 
                 st.markdown('***')
-                st.write('___Model Classification___ - {}: `{}`'.format(report['metrics'],report['test_performance']))
+                st.write('___Model Classification___')
 
                 # in future the eval_dict will contain paths to both keras model and pytorch model 
-                # so user can pick one from here 
+                # so user can pick one from here
                 
-                
-                model_predict(model_path,x[rn_index],y[rn_index],class_names,nn_type,report)
+                model_predict(model_path,x[rn_index],y[rn_index],class_names,nn_type,report,image=None)
                   
 
         elif control == 'Upload Test-Case':
-            st.warning('_Currently under development!_')
+            # st.warning('_Currently under development!_')
+            
+            st.markdown('***')
+            st.markdown('''<p style='color=red; font-weight:bold; font-style:italic; text-align:center;'>Upload a Test-Case -- <small style='color:#EE4C2C;'>{}</small></p>'''.format(project),unsafe_allow_html=True)
             image_file = st.file_uploader("Upload Image",type=['jpg', 'png', 'jpeg'])
             
-            if not image_file is None:
-                st.image(image_file,width=220)
             
-    
-    st.markdown('***')
-    if st.checkbox('Note',False):
-        st.markdown('_Note, This Model evaluation block uses only keras encoded models for predictions, because it’s simpler to save model and reuse in Keras than in Pytorch -- which uses pretty unorthodox methodology to save and reuse models;_')
+            classes_slot = st.empty()
+            
+            st.markdown('***')
+            image_col, label_col = st.beta_columns(2)
+            caption = st.empty()
+            
+            _,height,width,_ = dims
+            if not image_file is None:
+                
+                classes_slot.markdown(f'_Classes Model Trained for_ `{class_names}`')
+                image_col.image(image_file,width=330,caption='')
+                label = label_col.text_input(f'Which class does this belong to?')
+                
+                if re.search(r"[a-z | \d]+", label) and label == '':
+                    label_col.markdown('_Please Enter a Valid Label of the Image_')
+                else:
+                    caption.markdown('''<p style='padding-left:90px; font-family:menlo; font-size:16px;'> ---- {} ----</p>'''.format(label),unsafe_allow_html=True)
+                img_arr = Image.open(image_file)
+                
+                # Dynamically reshaping and Normalised Image as required by the network
+                if not project == 'MNIST':
+                    resized = img_arr.resize((height,width))
+                    resized = np.array(resized) / 255.
+                    resized = resized.reshape(1,*(resized.shape))
+                else:
+                    resized = img_arr.resize((height,width))
+                    resized = np.array(resized) / 255.
+                    resized = resized.reshape(1,*(resized.shape))
+                    resized = resized[:,:,:,1].reshape(*resized[:,:,:,1].shape, 1)
+                    st.write(resized.shape)
+                    
+                
+                st.markdown('***')
+                header, predict = st.beta_columns(2)
+                header.write('___Model Classification___')
+                if predict.button('Classify!'):
+                    model_predict(model_path,None,label,class_names,nn_type,report,image=resized)
 
-    
-   
-    
+
+            
+            st.markdown('***')
+            if st.checkbox('Note',False):
+                st.markdown('_Note, This Model evaluation block uses only keras encoded models for predictions, because it’s simpler to save model and reuse in Keras than in Pytorch -- which uses pretty unorthodox methodology to save and reuse models;_')
+
+            
+          
 def cs_body(report,project,framework,nn_type):
 
 
@@ -291,15 +368,161 @@ def cs_data(overview_path):
             pass
 
     
+
+def cs_project(nn_type,catalog):
+
+
+    nn_type = 'CNN' if nn_type == 'Convolutional Neural Networks' else nn_type
+    catalog = catalog[catalog['type'] == nn_type]
+    paths = list(catalog['path'])
+    projects = list(catalog['project'].unique())
+    # catalog, paths, projects, types = read_catalog(catalog_path,nn_type) # read paths 
+
     
 
+    if nn_type == 'CNN':
+        
+        catalog = catalog[catalog['type'] == nn_type]
+        st.sidebar.markdown('***')
+        project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
+        framework  = st.sidebar.radio("Framework", ("Keras", "Pytorch"), key='Deep-Learning-frameworks')
+
+        
+
+        
+        # for data-overview and eval
+        overview = os.path.join('./Projects', project, 'samples','overview.txt')
+        evaluate = os.path.join('./Projects', project, 'samples','evaluate.txt')
+
+
+        # catalog according to framework
+        catalog_fw = catalog[catalog['framework'] == framework+'/']
+        
+        # st.write(catalog_fw)
+
+        if not catalog_fw.empty:
+            slice_ = catalog_fw[catalog_fw['project'] == project]
+            if not slice_.empty:
+                # st.write(slice_)
+                #  report df 
+                with open(slice_['path'].values[0],'rb') as f:
+                    data = f.read()
+                
+                report = pickle.loads(data)
+                
+                project_name = report['project_name']
+                temp_desc = report['desc']
+                st.markdown("<h3 style='font-family: BioRhyme'>Project Title : <bold><strong style='color:#E45E18; padding-left:20px;'>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
+                st.markdown('''<h3 style='font-family: BioRhyme'> Description :</h3> <i>{}<i>'''.format(temp_desc),unsafe_allow_html=True)
+                
+                if framework == 'Keras':
+                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
+                else:
+                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
+                # st.markdown('**Implementation** ~ ___{}___'.format(framework))
+                
+                st.markdown('***')
+
+                radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
+
+                st.sidebar.markdown('***') # sidebar section break
+
+                options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
+
+                if options == 'Project Artefacts':
+                    cs_body(report,project,framework,nn_type)
+                elif options == 'Plots':
+                    cs_plots(report)
+                elif options == 'Data Overview':
+                    cs_data(overview)
+                elif options == 'Model Evaluation':
+                    
+                    model_eval(evaluate,overview,project,nn_type,report)
+            
+            else:
+                st.error(f"{framework}'s Version of {project} doesn't exist in the catalog.")
+
+
+
+            
+        else:
+            st.markdown("There are no traces of a _Artefacts.txt_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
+
+    
+        
+
+        st.markdown('***')
+    
+    
+    elif nn_type == 'Transfer Learning':
+        catalog = catalog[catalog['type'] == nn_type]
+
+        # st.write(catalog)
+        projects = list(catalog['project'])
+        
+        # projects list
+        st.sidebar.markdown('***')
+        project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
+        framework = catalog['framework'].values[0][:-1]
+        
+        
+
+
+        # for data-overview and eval
+        overview = os.path.join('./Projects','Transfer-Learning' ,project, 'samples','overview.txt')
+        evaluate = os.path.join('./Projects','Transfer-Learning' ,project, 'samples','evaluate.txt')
+        
+        
+        slice_ = catalog[catalog['project'] == project]
+        if not slice_.empty:
+            # st.write(slice_)
+            #  report df 
+            with open(slice_['path'].values[0],'rb') as f:
+                data = f.read()
+            
+            report = pickle.loads(data)
+            
+            project_name = report['project_name']
+            temp_desc = report['desc']
+            st.markdown("<h3 style='font-family: Lexend Mega;'>Project Title : <bold><strong style='color:#E45E18; padding-left:20px;'>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
+            st.markdown('''<h3 style='font-family: BioRhyme'> Description :</h3> <i>{}<i>'''.format(temp_desc),unsafe_allow_html=True)
+                
+                
+            if framework == 'Keras':
+                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
+            else:
+                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
+                
+
+            st.markdown('***')
+
+            # st.write(report)
+
+            
+
+            radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
+
+            st.sidebar.markdown('***') # sidebar section break
+            
+
+            options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
+
+            if options == 'Project Artefacts':
+                cs_body(report,project,framework,nn_type)
+            elif options == 'Plots':
+                cs_plots(report)
+            elif options == 'Data Overview':
+                cs_data(overview)
+            elif options == 'Model Evaluation':
+                
+                model_eval(evaluate,overview,project,nn_type,report)
+        
 
 
 
 def cs_main():
     
     st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./pngs/brain.png",layout="centered",initial_sidebar_state="auto",)
-   
     tagline = 'My odyssey of attaining Deep Learning knowledge'
     st.markdown('''<h1 style='text-align:center; font-weight:bold; color:black;'>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("./pngs/deep-learning.png"),tagline),unsafe_allow_html=True)
     # st.image('./banner.png',width=700)
@@ -316,170 +539,39 @@ def cs_main():
         types_a = ('Convolutional Neural Networks', 'Transfer Learning')
         all_list = list(catalog['project'].unique())
         date = list(catalog['date'])[-1:]
-        nn_type = st.sidebar.radio('Category',types_a,key='nn-type')
-        nn_type = 'CNN' if nn_type == 'Convolutional Neural Networks' else nn_type
-        catalog = catalog[catalog['type'] == nn_type]
-        paths = list(catalog['path'])
-        projects = list(catalog['project'].unique())
-        # catalog, paths, projects, types = read_catalog(catalog_path,nn_type) # read paths 
-        
-    
 
-        
-        
+        control = st.sidebar.beta_expander('Category')
+        selection = control.radio('Control', ['Projects','Information'])
+        if selection == 'Projects':
+            nn_type = control.radio('Category',types_a,key='nn-type')
+            cs_project(nn_type, catalog)
 
-        if nn_type == 'CNN':
-            
-            catalog = catalog[catalog['type'] == nn_type]
-            project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
-            framework  = st.sidebar.radio("Framework", ("Keras", "Pytorch"), key='Deep-Learning-frameworks')
-
-            
-
-           
-            # for data-overview and eval
-            overview = os.path.join('./Projects', project, 'samples','overview.txt')
-            evaluate = os.path.join('./Projects', project, 'samples','evaluate.txt')
-
-
-            # catalog according to framework
-            catalog_fw = catalog[catalog['framework'] == framework+'/']
-            
-            # st.write(catalog_fw)
-
-            if not catalog_fw.empty:
-                slice_ = catalog_fw[catalog_fw['project'] == project]
-                if not slice_.empty:
-                    # st.write(slice_)
-                    #  report df 
-                    with open(slice_['path'].values[0],'rb') as f:
-                        data = f.read()
-                    
-                    report = pickle.loads(data)
-                    
-                    project_name = report['project_name']
-                    temp_desc = report['desc']
-                    st.markdown("<h3 style='font-family: BioRhyme'>Project Title : <bold><strong style='color:#E45E18; padding-left:20px;'>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
-                    st.markdown('''<h3 style='font-family: BioRhyme'> Description :</h3> <i>{}<i>'''.format(temp_desc),unsafe_allow_html=True)
-                    
-                    if framework == 'Keras':
-                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
-                    else:
-                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
-                    # st.markdown('**Implementation** ~ ___{}___'.format(framework))
-                    
-                    st.markdown('***')
-
-                    radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
-
-                    st.sidebar.markdown('***') # sidebar section break
-
-                    options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
-
-                    if options == 'Project Artefacts':
-                        cs_body(report,project,framework,nn_type)
-                    elif options == 'Plots':
-                        cs_plots(report)
-                    elif options == 'Data Overview':
-                        cs_data(overview)
-                    elif options == 'Model Evaluation':
-                        
-                        model_eval(evaluate,project,nn_type,report)
-                
-                else:
-                    st.error(f"{framework}'s Version of {project} doesn't exist in the catalog.")
-
-
-
-                
+        else:
+            info = control.radio('Miscellaneous',('Simulated Neural-Network','Applied Pytorch Tensor Basics'),key='miscellaneous')
+            if info == 'Simulated Neural-Network':
+                sim.app()
             else:
-                st.markdown("There are no traces of a _Artefacts.txt_ file under the ***{}*** implementation in the project _dir_, There's a possibility that the project is unfinished or missing files required to render the subject. until then try other projects.".format(framework))
-
-        
-            
-
-            st.markdown('***')
-        
-       
-        elif nn_type == 'Transfer Learning':
-            catalog = catalog[catalog['type'] == nn_type]
-
-            # st.write(catalog)
-            projects = list(catalog['project'])
-            
-            # projects list
-            project = st.sidebar.selectbox('Project Name',projects, key='project-name')  
-            framework = catalog['framework'].values[0][:-1]
-            
-            
-
-
-            # for data-overview and eval
-            overview = os.path.join('./Projects','Transfer-Learning' ,project, 'samples','overview.txt')
-            evaluate = os.path.join('./Projects','Transfer-Learning' ,project, 'samples','evaluate.txt')
-            
-            
-            slice_ = catalog[catalog['project'] == project]
-            if not slice_.empty:
-                # st.write(slice_)
-                #  report df 
-                with open(slice_['path'].values[0],'rb') as f:
-                    data = f.read()
-                
-                report = pickle.loads(data)
-                
-                project_name = report['project_name']
-                temp_desc = report['desc']
-                st.markdown("<h3 style='font-family: Lexend Mega;'>Project Title : <bold><strong style='color:#E45E18; padding-left:20px;'>{}</strong></bold></h3>".format(project_name),unsafe_allow_html=True)
-                st.markdown('''<h3 style='font-family: BioRhyme'> Description :</h3> <i>{}<i>'''.format(temp_desc),unsafe_allow_html=True)
-                    
-                    
-                if framework == 'Keras':
-                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
-                else:
-                        st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
-                    
-#                 if framework == 'Keras':
-#                     st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
-#                 else:
-#                     st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
-                
+                st.markdown('''<h3 style='font-family: BioRhyme;'><b style='color:#EE4C2C;'>Applied Pytorch Tensors</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
+                st.markdown('_IPYNB of applied tensor fucntionalities will be rendered here_')
+                st.warning('___Under Development___')
                 st.markdown('***')
-
-                # st.write(report)
-
-                
-
-                radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
-
-                st.sidebar.markdown('***') # sidebar section break
-                
-
-                options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
-
-                if options == 'Project Artefacts':
-                    cs_body(report,project,framework,nn_type)
-                elif options == 'Plots':
-                    cs_plots(report)
-                elif options == 'Data Overview':
-                    cs_data(overview)
-                elif options == 'Model Evaluation':
                     
-                    model_eval(evaluate,project,nn_type,report)
-            
-
         st.sidebar.markdown('***')
-        all_proj = st.sidebar.beta_expander('All projects')
-        all_proj.code('** Current List **')
-        all_proj.write(all_list)
-        
-        
 
+        if control == 'Simulated Neural-Network':
+            sim.app()
 
+    
     # if catalog.csv doesn't exist
     else:
         st.warning("There's a possibility that the repository is corrupted -- required catalog for app-initiation is non-existent. run pipline script to establish catalog.")
+
+
+    all_proj = st.sidebar.beta_expander('All projects')
+    all_proj.code('** Current List **')
+    all_proj.write(all_list)
     
+
     
     
 def page(expander):
