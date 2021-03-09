@@ -80,10 +80,16 @@
     * made necessary changes to paths in the application to anticipate changes in the repository 
 
 * **[8 Mar, 2021]** _pipeline patch_
-    
-    * pipeline now can --update artefacts like summary and desc by taking formatted information from files
+  * pipeline now can --update artefacts like summary and desc by taking formatted information from files
     * updated doc-string
     * fixed formatting for Dogs-Cats Summary
-  
 
+* **[10 Mar, 2021]** _Upload-test case functionality_
 
+    * People can now uploaded an Image concerning the project and get a real-time classification
+        of the model.
+    *  Category is now a expander section with two sub-categories Projects and Information
+        * Information holds all the references, the simulated intermediate activations, pytorch tensor application 
+        * Project section is unchanged
+
+    * Application now has multiple page functionality with all the additional/miscellaneous scripts set under `/src`
