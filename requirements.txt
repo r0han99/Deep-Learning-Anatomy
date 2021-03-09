@@ -1,10 +1,9 @@
 # pickle was the lord saviour of this project
-
-matplotlib == 3.3.2
+streamlit == 0.75.0
+Pillow == 8.0.1
 numpy == 1.19.2
 pandas == 1.1.3
 scikit_learn == 0.23.2
 seaborn == 0.11.0
-streamlit == 0.75.0
 tensorflow == 2.4.1
-
+opencv_python == 4.5.1.48
