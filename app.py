@@ -18,7 +18,6 @@ import os
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import to_categorical
 # computer vision
-import cv2
 from PIL import Image
 
 
