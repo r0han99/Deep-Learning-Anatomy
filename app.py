@@ -245,7 +245,7 @@ def model_eval(evaluate_path,overview_path,project,nn_type,report):
                     resized = np.array(resized) / 255.
                     resized = resized.reshape(1,*(resized.shape))
                     resized = resized[:,:,:,1].reshape(*resized[:,:,:,1].shape, 1)
-                    st.write(resized.shape)
+#                     st.write(resized.shape)
                     
                 
                 st.markdown('***')
