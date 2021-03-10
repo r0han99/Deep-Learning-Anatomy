@@ -551,7 +551,7 @@ def cs_main():
                 sim.app()
             else:
                 st.markdown('''<h3 style='font-family: BioRhyme;'><b style='color:#EE4C2C;'>Applied Pytorch Tensors</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
-                st.markdown('_IPYNB of applied tensor fucntionalities will be rendered here_')
+                st.markdown('_IPYNB of applied tensor functionalities will be rendered here_')
                 st.warning('___Under Development___')
                 st.markdown('***')
                     
