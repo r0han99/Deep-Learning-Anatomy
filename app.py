@@ -387,7 +387,6 @@ def cs_project(nn_type,catalog):
         framework  = st.sidebar.radio("Framework", ("Keras", "Pytorch"), key='Deep-Learning-frameworks')
 
         
-
         
         # for data-overview and eval
         overview = os.path.join('./Projects', project, 'samples','overview.txt')
@@ -425,8 +424,9 @@ def cs_project(nn_type,catalog):
                 radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
 
                 st.sidebar.markdown('***') # sidebar section break
+                st.sidebar.markdown('___Control Shelf___')
 
-                options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
+                options = st.sidebar.radio('Project Attrs', radios, key='web-page-definition')
 
                 if options == 'Project Artefacts':
                     cs_body(report,project,framework,nn_type)
@@ -502,9 +502,10 @@ def cs_project(nn_type,catalog):
             radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
 
             st.sidebar.markdown('***') # sidebar section break
+            st.sidebar.markdown('___Control Shelf___')
             
 
-            options = st.sidebar.radio('Specifics', radios, key='web-page-definition')
+            options = st.sidebar.radio('Project Attrs', radios, key='web-page-definition')
 
             if options == 'Project Artefacts':
                 cs_body(report,project,framework,nn_type)
@@ -542,7 +543,7 @@ def cs_main():
         control = st.sidebar.beta_expander('Category')
         selection = control.radio('Control', ['Projects','Information'])
         if selection == 'Projects':
-            nn_type = control.radio('Category',types_a,key='nn-type')
+            nn_type = control.radio('Approaches',types_a,key='nn-type')
             cs_project(nn_type, catalog)
 
         else:
