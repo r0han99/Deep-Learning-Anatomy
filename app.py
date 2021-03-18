@@ -540,7 +540,7 @@ def cs_main():
         all_list = list(catalog['project'].unique())
         date = list(catalog['date'])[-1:]
 
-        control = st.sidebar.beta_expander('Category')
+        control = st.sidebar.beta_expander('Category',expanded=True)
         selection = control.radio('Control', ['Projects','Information'])
         if selection == 'Projects':
             nn_type = control.radio('Approaches',types_a,key='nn-type')
