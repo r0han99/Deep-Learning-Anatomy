@@ -522,15 +522,21 @@ def cs_project(nn_type,catalog):
 
 def cs_main():
     
-    st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./pngs/brain.png",layout="centered",initial_sidebar_state="auto",)
+    # Page configuration
+    st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./pngs/brain.png",layout="centered",initial_sidebar_state="auto")
+
+
+    # Title & Tagline
     tagline = 'My odyssey of attaining Deep Learning knowledge'
-    st.markdown('''<h1 style='text-align:center; font-weight:bold; color:black;'>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("./pngs/deep-learning.png"),tagline),unsafe_allow_html=True)
-    # st.image('./banner.png',width=700)
+    st.markdown('''<h1 style='text-align:center; font-weight:bold; '>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("./pngs/deep-learning.png"),tagline),unsafe_allow_html=True)
+    
+
+    # divider
     st.markdown('<hr style="height:2px;border-width:0;color:gray;background-color:gray">',unsafe_allow_html=True)
     st.sidebar.markdown("<h2 style='font-family:BioRhyme; '>Project Catalog 📓</h2>",unsafe_allow_html=True)
     st.sidebar.markdown('***')
     
-
+    # Catalog path
     catalog_path = './assets/catalog.csv'
     if os.path.exists(catalog_path):
         
