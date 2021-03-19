@@ -547,7 +547,7 @@ def cs_main():
         date = list(catalog['date'])[-1:]
 
         control = st.sidebar.beta_expander('Category',expanded=True)
-        selection = control.radio('Control', ['Projects','Information'])
+        selection = control.radio('Control', ['Projects','Anatomy'])
         if selection == 'Projects':
             nn_type = control.radio('Approaches',types_a,key='nn-type')
             cs_project(nn_type, catalog)
@@ -641,7 +641,7 @@ if __name__ == '__main__':
     # expander.markdown('***')
 
     st.sidebar.markdown('***')
-    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b> [<img src='data:image/png;base64,{}' class='img-fluid' width=33 height=33>](https://github.com/r0han99/) '''.format(img_to_bytes("./pngs/GitHub.png"),img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
+    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b> [<img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30>](https://github.com/r0han99/) '''.format(img_to_bytes("./pngs/GitHub.png"),img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     
     # expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     # st.sidebar.markdown('''''')
