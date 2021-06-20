@@ -542,7 +542,7 @@ def cs_main():
         
         catalog = pd.read_csv(catalog_path)
         types = list(catalog['type'].unique())
-        types_a = ('Convolutional Neural Networks', 'Transfer Learning')
+        types_a = ('Transfer Learning', 'Convolutional Neural Networks')
         all_list = list(catalog['project'].unique())
         date = list(catalog['date'])[-1:]
 
