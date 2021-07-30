@@ -421,7 +421,7 @@ def cs_project(nn_type,catalog):
                 
                 st.markdown('***')
 
-                radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
+                radios = ('Project Artefacts','Data Overview','Train-Cycle Plots','Model Playground')
 
                 st.sidebar.markdown('***') # sidebar section break
                 st.sidebar.markdown('___Control Shelf___')
@@ -499,7 +499,7 @@ def cs_project(nn_type,catalog):
 
             
 
-            radios = ('Project Artefacts','Data Overview','Plots','Model Evaluation')
+            radios = ('Project Artefacts','Data Overview','Train-Cycle Plots','Model Playground')
 
             st.sidebar.markdown('***') # sidebar section break
             st.sidebar.markdown('___Control Shelf___')
@@ -509,11 +509,11 @@ def cs_project(nn_type,catalog):
 
             if options == 'Project Artefacts':
                 cs_body(report,project,framework,nn_type)
-            elif options == 'Plots':
+            elif options == 'Train-Cycle Plots':
                 cs_plots(report)
             elif options == 'Data Overview':
                 cs_data(overview)
-            elif options == 'Model Evaluation':
+            elif options == 'Model Playground':
                 
                 model_eval(evaluate,overview,project,nn_type,report)
         
