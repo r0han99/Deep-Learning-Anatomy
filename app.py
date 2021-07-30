@@ -126,7 +126,7 @@ def model_eval(evaluate_path,overview_path,project,nn_type,report):
 
 
     
-    st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Real-Time Model Evaluation</h3>",unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: sora; font-weight:bold; font-size:25px;'>Real-Time Model Evaluation</h3>",unsafe_allow_html=True)
 
     st.markdown('***')
     try:
@@ -270,7 +270,7 @@ def cs_body(report,project,framework,nn_type):
 
     cols = list(report.keys())[3:-3]
     # report.fillna('None',inplace=True)
-    st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Project Artefacts</h3>",unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: sora; font-weight:bold; font-size:25px;'>Project Artefacts</h3>",unsafe_allow_html=True)
     st.markdown('***')
 
     with open('./assets/prompt-list.txt', 'rb') as f:
@@ -288,7 +288,7 @@ def cs_body(report,project,framework,nn_type):
 
     st.markdown('***')
 
-    st.markdown('Summary: ')
+    st.markdown('***Synopsis: ***')
     st.markdown('_'+report['summary']+'_')
 
 
@@ -305,7 +305,7 @@ def cs_body(report,project,framework,nn_type):
 
 def cs_plots(report):
 
-    st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Visualisation of Train Cycle ( Epoch vs Metric/Loss )</h3>",unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: sora; font-weight:bold; font-size:25px;'>Visualisation of Train Cycle ( Epoch vs Metric/Loss )</h3>",unsafe_allow_html=True)
     
     
     st.markdown('***')
@@ -316,7 +316,7 @@ def cs_plots(report):
         st.image(name)
         
 def cs_data(overview_path):
-    st.markdown("<h3 style='font-family: BioRhyme; font-weight:bold; font-size:25px;'>Data Characteristics and Overview</h3>",unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: sora; font-weight:bold; font-size:25px;'>Data Characteristics and Overview</h3>",unsafe_allow_html=True)
 
     st.markdown('***')
     
@@ -414,9 +414,9 @@ def cs_project(nn_type,catalog):
                 st.markdown('''<h3 style='font-family: BioRhyme'> Description :</h3> <i>{}<i>'''.format(temp_desc),unsafe_allow_html=True)
                 
                 if framework == 'Keras':
-                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
+                    st.markdown('''<h3 style='font-family: sora;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
                 else:
-                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
+                    st.markdown('''<h3 style='font-family: sora;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
                 # st.markdown('**Implementation** ~ ___{}___'.format(framework))
                 
                 st.markdown('***')
@@ -488,9 +488,9 @@ def cs_project(nn_type,catalog):
                 
                 
             if framework == 'Keras':
-                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
+                    st.markdown('''<h3 style='font-family: sora;'>Implementation : <b style='color:#EB8E26; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30></h3>'''.format(framework,img_to_bytes('./pngs/Tensorflow.png')),unsafe_allow_html=True)
             else:
-                    st.markdown('''<h3 style='font-family: BioRhyme;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
+                    st.markdown('''<h3 style='font-family: sora;'>Implementation : <b style='color:#EE4C2C; padding-left:20px;'>{}</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(framework,img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
                 
 
             st.markdown('***')
@@ -522,18 +522,16 @@ def cs_project(nn_type,catalog):
 
 def cs_main():
     
-    # Page configuration
-    st.set_page_config(page_title="Deep Learning Anatomy",page_icon="./pngs/brain.png",layout="centered",initial_sidebar_state="auto")
 
-
+    
     # Title & Tagline
     tagline = 'My odyssey of attaining Deep Learning knowledge'
-    st.markdown('''<h1 style='text-align:center; font-weight:bold; '>Deep Learning Anatomy  <img src='data:image/png;base64,{}' class='img-fluid' width=64 height=64><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px'>{}</p></h1>'''.format(img_to_bytes("./pngs/deep-learning.png"),tagline),unsafe_allow_html=True)
+    st.markdown('''<h1 style='text-align:center; font-weight:bold; font-size:35px; font-family:syne;'>The Anatomy of Deep Learning <img src='data:image/png;base64,{}' class='img-fluid' width=33 height=33><br><p style='font-style: italic; font-size:15px; text-align:center; padding-right:60px; padding-top:20px;'>{}</p></h1>'''.format(img_to_bytes("./pngs/cyborg.png"),tagline),unsafe_allow_html=True)
     
 
     # divider
     st.markdown('<hr style="height:2px;border-width:0;color:gray;background-color:gray">',unsafe_allow_html=True)
-    st.sidebar.markdown("<h2 style='font-family:BioRhyme; '>Project Catalog 📓</h2>",unsafe_allow_html=True)
+    st.sidebar.markdown("<h2 style='font-family:sora; '>Project Catalog 📓</h2>",unsafe_allow_html=True)
     st.sidebar.markdown('***')
     
     # Catalog path
@@ -557,7 +555,7 @@ def cs_main():
             if info == 'Simulated Neural-Network':
                 sim.app()
             else:
-                st.markdown('''<h3 style='font-family: BioRhyme;'><b style='color:#EE4C2C;'>Applied Pytorch Tensors</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
+                st.markdown('''<h3 style='font-family: sora;'><b style='color:#EE4C2C;'>Applied Pytorch Tensors</b> <img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40></h3>'''.format(img_to_bytes('./pngs/pytorch.png')),unsafe_allow_html=True)
                 st.markdown('_IPYNB of applied tensor functionalities will be rendered here_')
                 st.warning('___Under Development___')
                 st.markdown('***')
@@ -608,6 +606,23 @@ def page(expander):
 if __name__ == '__main__':
     
 
+
+    # Page configuration
+    st.set_page_config(page_title="Deep-Learning Dashboard",page_icon="./pngs/brain.png",layout="centered",initial_sidebar_state="auto")
+
+
+    # fonts 
+    st.markdown('''<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap" rel="stylesheet">''',unsafe_allow_html=True)
+    
+
+    st.markdown('''<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Poppins&family=Sora:wght@300&display=swap" rel="stylesheet">''',unsafe_allow_html=True)
+
+
+
     cs_main()
    
 
@@ -641,7 +656,7 @@ if __name__ == '__main__':
     # expander.markdown('***')
 
     st.sidebar.markdown('***')
-    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: BioRhyme; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b> [<img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30>](https://github.com/r0han99/) '''.format(img_to_bytes("./pngs/GitHub.png"),img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
+    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=40 height=40>](https://github.com/r0han99/Deep-Learning-Anatomy) <b style='font-family: sora; font-weight:bold; font-size:18px; text-transform: capitalize;' >Developed & Deployed by <i style='text-transform: lowercase; font-family: courier; color: crimson;'>r0han</i></b> [<img src='data:image/png;base64,{}' class='img-fluid' width=30 height=30>](https://github.com/r0han99/) '''.format(img_to_bytes("./pngs/GitHub.png"),img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     
     # expander.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=45 height=45>](https://github.com/r0han99/) <small><i>My Mind Palace </i></small>'''.format(img_to_bytes('./pngs/tesseract.png')), unsafe_allow_html=True)
     # st.sidebar.markdown('''''')
